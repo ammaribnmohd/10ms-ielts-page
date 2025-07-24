@@ -1,61 +1,92 @@
 // src/types/course.ts
 
-// --- Individual Component/Data Types ---
+// --- Base Types from API Response ---
+
+export interface Media {
+  name: string;
+  resource_type: 'video' | 'image';
+  resource_value: string; // This is the YouTube ID for videos
+  thumbnail_url: string;
+}
+
+export interface ChecklistItem {
+  icon: string;
+  text: string;
+}
+
+export interface Seo {
+  title: string;
+  description: string;
+  image: string;
+}
+
+// We'll use this to type the raw API data during processing
+export interface SeoMetaTag {
+  content: string;
+  type: string;
+  value: string;
+}
+
+
+// --- Section-Specific Types ---
 
 export interface Instructor {
   name: string;
   image: string;
-  details: string;
-}
-
-export interface ChecklistItem {
-  text: string;
-}
-
-export interface Media {
-  link: string; // The YouTube link
+  description: string; // The API uses 'description' for details
 }
 
 export interface FeatureItem {
-  // NOTE: Inspect the actual API response for the correct structure.
-  // This is a common pattern.
   icon: string;
   title: string;
-  description: string;
+  subtitle: string; // The API uses 'subtitle' for description
 }
+
+export interface PointerItem {
+  text: string;
+}
+
+export interface AboutItem {
+  title: string; // Contains <h2><b>...</b></h2>
+  description: string; // Contains <li>...</li>
+}
+
 
 // --- Discriminated Union for Sections ---
-// This ensures that if type is 'instructor', data is guaranteed to be Instructor[]
 
 interface BaseSection {
-  title: string;
+  type: string;
+  name: string; // This is the title of the section
 }
 
-interface InstructorSection extends BaseSection {
-  type: 'instructor';
-  data: Instructor[];
+interface InstructorsSection extends BaseSection {
+  type: 'instructors';
+  values: Instructor[];
 }
 
 interface FeaturesSection extends BaseSection {
   type: 'features';
-  data: FeatureItem[];
+  values: FeatureItem[];
 }
 
 interface PointersSection extends BaseSection {
   type: 'pointers';
-  data: string[]; // Usually a simple list of strings
+  values: PointerItem[];
 }
 
 interface AboutSection extends BaseSection {
   type: 'about';
-  data: string; // Usually an HTML string
+  values: AboutItem[];
 }
 
-// The main Section type is a union of all possible section types
-export type Section = InstructorSection | FeaturesSection | PointersSection | AboutSection;
+// Add other section types here if you want to render them
+// e.g. | FaqSection | TestimonialsSection etc.
+
+// This is the final Section type. We only include what we plan to render.
+export type Section = InstructorsSection | FeaturesSection | PointersSection | AboutSection;
 
 
-// --- Main Course Data Structure ---
+// --- The Main Course Data Structure ---
 
 export interface CourseData {
   title: string;
@@ -63,12 +94,9 @@ export interface CourseData {
   media: Media[];
   checklist: ChecklistItem[];
   cta_text: {
-    single: string;
+    name: string; // The API uses 'name' for the button text
+    value: string;
   };
   sections: Section[];
-  seo: {
-    title: string;
-    description: string;
-    image: string;
-  };
+  seo: Seo;
 }
