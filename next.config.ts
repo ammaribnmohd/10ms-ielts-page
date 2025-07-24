@@ -1,8 +1,9 @@
+// next.config.ts
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   reactStrictMode: true,
+  output: 'standalone', // Add this line
 };
 
 export default nextConfig;
