@@ -1,25 +1,32 @@
 import { ChecklistItem } from '@/types/course';
+import Image from 'next/image';
 
 interface ChecklistProps {
+  title: string;
   items: ChecklistItem[];
 }
 
-// Simple Check Icon SVG
-const CheckIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-    </svg>
-);
-
-export default function Checklist({ items }: ChecklistProps) {
+export default function Checklist({ title, items }: ChecklistProps) {
   return (
-    <div className="p-6 bg-blue-50 border border-blue-200 rounded-lg">
-        <h3 className="text-xl font-bold mb-4">What You Get</h3>
-        <ul className="space-y-3">
-            {items.map((item, index) => (
-                <li key={index} className="flex items-start">
-                    <span className="mr-2 mt-1 flex-shrink-0"><CheckIcon /></span>
-                    <span>{item.text}</span>
+    <div className="p-6 border border-gray-200 rounded-lg bg-white">
+        <h3 className="text-xl font-bold mb-4 text-gray-800">{title}</h3>
+        <ul className="space-y-4">
+            {/* 
+              MODIFICATION: 
+              We are now mapping directly over `items` instead of `visibleItems`.
+              The filter has been removed.
+            */}
+            {items.map((item) => (
+                <li key={item.id} className="flex items-center space-x-3">
+                    {/* Use next/image to render the icon from the API */}
+                    <Image
+                      src={item.icon}
+                      alt="" // Alt text is empty for decorative icons
+                      width={24}
+                      height={24}
+                      className="flex-shrink-0"
+                    />
+                    <span className="text-gray-700">{item.text}</span>
                 </li>
             ))}
         </ul>

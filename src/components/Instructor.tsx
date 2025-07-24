@@ -21,7 +21,6 @@ export default function Instructors({ instructors }: InstructorsProps) {
             />
             <div>
               <h3 className="font-semibold text-lg">{instructor.name}</h3>
-              <p className="text-gray-600">{instructor.details}</p>
             </div>
           </div>
         ))}

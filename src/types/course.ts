@@ -12,6 +12,9 @@ export interface Media {
 export interface ChecklistItem {
   icon: string;
   text: string;
+  color: string;
+  id: string;
+  list_page_visibility: boolean;
 }
 
 export interface Seo {
@@ -20,7 +23,6 @@ export interface Seo {
   image: string;
 }
 
-// We'll use this to type the raw API data during processing
 export interface SeoMetaTag {
   content: string;
   type: string;
@@ -33,13 +35,13 @@ export interface SeoMetaTag {
 export interface Instructor {
   name: string;
   image: string;
-  description: string; // The API uses 'description' for details
+  description: string;
 }
 
 export interface FeatureItem {
   icon: string;
   title: string;
-  subtitle: string; // The API uses 'subtitle' for description
+  subtitle: string;
 }
 
 export interface PointerItem {
@@ -47,8 +49,8 @@ export interface PointerItem {
 }
 
 export interface AboutItem {
-  title: string; // Contains <h2><b>...</b></h2>
-  description: string; // Contains <li>...</li>
+  title: string;
+  description: string;
 }
 
 
@@ -56,7 +58,7 @@ export interface AboutItem {
 
 interface BaseSection {
   type: string;
-  name: string; // This is the title of the section
+  name: string;
 }
 
 interface InstructorsSection extends BaseSection {
@@ -79,10 +81,6 @@ interface AboutSection extends BaseSection {
   values: AboutItem[];
 }
 
-// Add other section types here if you want to render them
-// e.g. | FaqSection | TestimonialsSection etc.
-
-// This is the final Section type. We only include what we plan to render.
 export type Section = InstructorsSection | FeaturesSection | PointersSection | AboutSection;
 
 
@@ -90,13 +88,24 @@ export type Section = InstructorsSection | FeaturesSection | PointersSection | A
 
 export interface CourseData {
   title: string;
-  description: string; // This is an HTML string
+  description: string;
   media: Media[];
   checklist: ChecklistItem[];
   cta_text: {
-    name: string; // The API uses 'name' for the button text
+    name: string;
     value: string;
   };
   sections: Section[];
   seo: Seo;
 }
+
+// --- NEW: UI-Specific Type for Page Translations ---
+export type Translations = {
+    en: {
+        checklistTitle: string;
+    };
+    bn: {
+        checklistTitle: string;
+        [key: string]: string; // Allows for any string key for section titles
+    };
+};
