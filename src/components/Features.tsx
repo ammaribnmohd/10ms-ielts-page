@@ -1,28 +1,35 @@
-// Assuming the data is an array of objects with 'icon' and 'text' properties.
-// You would need to inspect the API response for the actual structure.
-interface Feature {
-  icon: string;
-  text: string;
-}
+// FILE: src/components/Features.tsx
 
+// 1. Import the correct type from your central types file.
+import { FeatureItem } from "@/types/course";
+import Image from "next/image";
+
+// 2. Update the props interface to expect an array of FeatureItem.
+//    We no longer need a separate 'title' prop as the parent component handles that.
 interface FeaturesProps {
-  title: string;
-  features: Feature[];
+  features: FeatureItem[];
 }
 
-export default function Features({ title, features }: FeaturesProps) {
+export default function Features({ features }: FeaturesProps) {
   return (
-    <div className="p-6 bg-gray-50 rounded-lg">
-      <h2 className="text-2xl font-bold mb-4">{title}</h2>
-      <ul className="space-y-3">
-        {features.map((feature, index) => (
-          <li key={index} className="flex items-center">
-            {/* You might use an img tag or a more complex icon component here */}
-            <span className="mr-3 text-xl">{feature.icon}</span> 
-            <span>{feature.text}</span>
-          </li>
-        ))}
-      </ul>
+    // This layout will present the features in a clean grid.
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {features.map((feature) => (
+        <div key={feature.title} className="flex items-start space-x-4">
+          <Image 
+            src={feature.icon} 
+            alt="" // Decorative image, alt text is not required
+            width={40} 
+            height={40} 
+            className="mt-1 flex-shrink-0" 
+          />
+          <div>
+            {/* 3. Use the correct properties from the FeatureItem type: .title and .subtitle */}
+            <h3 className="font-semibold text-lg">{feature.title}</h3>
+            <p className="text-gray-600">{feature.subtitle}</p>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

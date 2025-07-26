@@ -1,131 +1,72 @@
-// src/pages/[lang].tsx
+// FILE: src/pages/[lang].tsx
 
-import { useState } from 'react';
 import type { GetStaticProps, GetStaticPaths, InferGetStaticPropsType } from 'next';
 import Head from 'next/head';
-import Image from 'next/image';
 import { useRouter } from 'next/router';
 
-// Import all necessary types, including the Translations type from your types file
-import type { CourseData, Section, Instructor, FeatureItem, PointerItem, AboutItem, SeoMetaTag, Translations } from '@/types/course';
+// Import all necessary types
+import type { CourseData, Section, Instructor, Translations, SeoMetaTag } from '@/types/course';
 
-// Import shared components
+
 import Trailer from '@/components/Trailer';
 import Checklist from '@/components/Checklist';
 import CTA from '@/components/CTA';
+import Instructors from '@/components/Instructor';
+import Features from '@/components/Features';
+import Pointers from '@/components/Pointers';
+import About from '@/components/About';
+import FeatureExplanations from '@/components/FeatureExplanations';
+import Testimonials from '@/components/Testimonials';
+import Faq from '@/components/Faq';
 
-// --- Reusable Icon Components ---
-const CheckIcon = () => (
-    <svg className="h-6 w-6 text-blue-500 flex-shrink-0 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-    </svg>
-);
+
+// --- Icon Components ---
 const GlobeIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2h1a2 2 0 002-2v-1a2 2 0 012-2h1.945M7.884 5.056a2 2 0 013.132 0l1.414 1.414a2 2 0 010 3.132l-1.414 1.414a2 2 0 01-3.132 0l-1.414-1.414a2 2 0 010-3.132zM12 21a9 9 0 100-18 9 9 0 000 18z" />
     </svg>
 );
-const ChevronDownIcon = ({ className }: { className?: string }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" className={`h-5 w-5 transition-transform duration-300 ${className}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-    </svg>
-);
 
-// --- Reusable Section Components ---
-const InstructorsSection = ({ values }: { values: Instructor[] }) => (
-  <div className="space-y-6">
-    {values.map((instructor) => (
-      <div key={instructor.name} className="flex items-start space-x-4">
-        <Image src={instructor.image} alt={instructor.name} width={80} height={80} className="rounded-full object-cover" />
-        <div>
-          <h3 className="font-semibold text-xl">{instructor.name}</h3>
-          <div className="text-gray-600 prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: instructor.description }} />
-        </div>
-      </div>
-    ))}
-  </div>
-);
-const FeaturesSection = ({ values }: { values: FeatureItem[] }) => (
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-    {values.map((feature) => (
-      <div key={feature.title} className="flex items-start space-x-4">
-        <Image src={feature.icon} alt="" width={40} height={40} className="mt-1" />
-        <div>
-          <h3 className="font-semibold text-lg">{feature.title}</h3>
-          <p className="text-gray-600">{feature.subtitle}</p>
-        </div>
-      </div>
-    ))}
-  </div>
-);
-const PointersSection = ({ values }: { values: PointerItem[] }) => (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
-        {values.map((pointer, index) => (
-            <div key={index} className="flex items-start">
-                <CheckIcon />
-                <span className="text-gray-700">{pointer.text}</span>
-            </div>
-        ))}
-    </div>
-);
-const CourseDetailsAccordion = ({ values }: { values: AboutItem[] }) => {
-    const [activeIndex, setActiveIndex] = useState<number | null>(null);
-    const handleToggle = (index: number) => {
-        setActiveIndex(activeIndex === index ? null : index);
-    };
-    return (
-        <div className="border border-slate-200 rounded-lg overflow-hidden">
-            {values.map((item, index) => {
-                const isOpen = activeIndex === index;
-                const cleanTitle = item.title.replace(/<[^>]*>?/gm, '');
-                return (
-                    <div key={index}>
-                        <button
-                            onClick={() => handleToggle(index)}
-                            className="w-full flex justify-between items-center p-5 text-left font-semibold text-gray-800 bg-white hover:bg-gray-50"
-                            aria-expanded={isOpen}
-                        >
-                            <span>{cleanTitle}</span>
-                            <ChevronDownIcon className={`transform text-gray-500 ${isOpen ? 'rotate-180' : ''}`} />
-                        </button>
-                        <div className={`grid overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
-                            <div className="overflow-hidden">
-                                <div className="prose max-w-none px-5 pb-5 text-slate-600" dangerouslySetInnerHTML={{ __html: item.description }} />
-                            </div>
-                        </div>
-                        {index < values.length - 1 && (<div className="mx-5 border-b border-dashed border-slate-200"></div>)}
-                    </div>
-                );
-            })}
-        </div>
-    );
-};
 
-// --- DynamicSection with Translation Logic ---
+// --- DynamicSection with Translation and Component-Routing Logic ---
 const DynamicSection = ({ section, lang, translations }: { section: Section; lang: 'en' | 'bn'; translations: Translations; }) => {
-  if (!section.values || section.values.length === 0) return null;
+  if (!section.values || section.values.length === 0) {
+    return null;
+  }
   
   let title = section.name; 
   if (lang === 'bn' && translations.bn[section.name]) {
       title = translations.bn[section.name];
   }
 
+  const renderSectionContent = () => {
+    // With the corrected types, this switch statement will now work without errors.
+    switch (section.type) {
+      case 'instructors': return <Instructors instructors={section.values} />;
+      case 'features': return <Features features={section.values} />;
+      case 'pointers': return <Pointers pointers={section.values} />;
+      case 'about': return <About items={section.values} />;
+      case 'faq': return <Faq items={section.values} />;
+      case 'feature_explanations': return <FeatureExplanations items={section.values} />;
+      case 'testimonials': return <Testimonials items={section.values} />;
+      default: return null;
+    }
+  }
+
+  const content = renderSectionContent();
+  if (!content) return null;
+
+  const useWrapper = !['about', 'faq'].includes(section.type);
+
   return (
     <div className="py-8">
-      <h2 className="text-3xl font-bold mb-6 text-gray-800">{title}</h2>
-      {section.type === 'about' ? (
-        <CourseDetailsAccordion values={section.values} />
+      {title && <h2 className="text-3xl font-bold mb-6 text-gray-800">{title}</h2>}
+      {useWrapper ? (
+         <div className="p-6 bg-slate-50 rounded-lg shadow-sm">
+            {content}
+         </div>
       ) : (
-        <div className="p-6 bg-slate-50 rounded-lg shadow-sm">
-          {(() => {
-            switch (section.type) {
-              case 'instructors': return <InstructorsSection values={section.values} />;
-              case 'features': return <FeaturesSection values={section.values} />;
-              case 'pointers': return <PointersSection values={section.values} />;
-              default: return null;
-            }
-          })()}
-        </div>
+        content
       )}
     </div>
   );
@@ -158,7 +99,9 @@ export default function CoursePage({ courseData }: InferGetStaticPropsType<typeo
           "How the course is laid out": "কোর্সটি যেভাবে সাজানো হয়েছে",
           "What you will learn by doing the course": "কোর্সটি করে যা শিখবেন",
           "Course details": "কোর্স সম্পর্কে বিস্তারিত",
-          "Course Exclusive Feature": "কোর্স এক্সক্লুসিভ ফিচার"
+          "Course Exclusive Feature": "কোর্স এক্সক্লুসিভ ফিচার",
+          "Students opinion": "শিক্ষার্থীদের মতামত",
+          "Frequently Ask Questions": "সাধারণ জিজ্ঞাসা"
       }
   };
   const t = translations[lang];
@@ -181,9 +124,7 @@ export default function CoursePage({ courseData }: InferGetStaticPropsType<typeo
                 aria-label="Toggle language"
             >
                 <GlobeIcon />
-                <span>
-                    {lang.toUpperCase()}
-                </span>
+                <span>{lang.toUpperCase()}</span>
             </button>
         </div>
 
@@ -195,7 +136,7 @@ export default function CoursePage({ courseData }: InferGetStaticPropsType<typeo
             {courseData.sections.map((section, index) => (
               <DynamicSection
                 key={index}
-                section={section as Section}
+                section={section}
                 lang={lang}
                 translations={translations}
               />
@@ -217,7 +158,7 @@ export default function CoursePage({ courseData }: InferGetStaticPropsType<typeo
 }
 
 
-// --- Data Fetching with ISR (No changes needed) ---
+// --- Data Fetching with ISR ---
 export const getStaticPaths: GetStaticPaths = async () => {
   return { paths: [{ params: { lang: 'en' } }, { params: { lang: 'bn' } }], fallback: 'blocking' };
 };

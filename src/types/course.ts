@@ -1,11 +1,11 @@
-// src/types/course.ts
+// FILE: src/types/course.ts
 
 // --- Base Types from API Response ---
 
 export interface Media {
   name: string;
   resource_type: 'video' | 'image';
-  resource_value: string; // This is the YouTube ID for videos
+  resource_value: string;
   thumbnail_url: string;
 }
 
@@ -30,7 +30,7 @@ export interface SeoMetaTag {
 }
 
 
-// --- Section-Specific Types ---
+// --- Section-Specific Item Types ---
 
 export interface Instructor {
   name: string;
@@ -51,6 +51,24 @@ export interface PointerItem {
 export interface AboutItem {
   title: string;
   description: string;
+}
+
+export interface FeatureExplanationItem {
+  title: string;
+  file_url: string;
+  checklist: string[];
+}
+
+export interface TestimonialItem {
+    name: string;
+    description: string;
+    profile_image: string;
+    testimonial: string;
+}
+
+export interface FaqItem {
+    question: string;
+    answer: string;
 }
 
 
@@ -81,7 +99,33 @@ interface AboutSection extends BaseSection {
   values: AboutItem[];
 }
 
-export type Section = InstructorsSection | FeaturesSection | PointersSection | AboutSection;
+interface FeatureExplanationsSection extends BaseSection {
+    type: 'feature_explanations';
+    values: FeatureExplanationItem[];
+}
+
+interface TestimonialsSection extends BaseSection {
+    type: 'testimonials';
+    values: TestimonialItem[];
+}
+
+interface FaqSection extends BaseSection {
+    type: 'faq';
+    values: FaqItem[];
+}
+
+// NOTE: The 'OtherSection' / catch-all has been REMOVED.
+// This makes the union "closed", allowing TypeScript to perform proper type narrowing.
+// Any section types from the API not defined here will now correctly cause a type error during data fetching.
+
+export type Section = 
+  | InstructorsSection 
+  | FeaturesSection 
+  | PointersSection 
+  | AboutSection
+  | FeatureExplanationsSection
+  | TestimonialsSection
+  | FaqSection;
 
 
 // --- The Main Course Data Structure ---
@@ -99,13 +143,13 @@ export interface CourseData {
   seo: Seo;
 }
 
-// --- NEW: UI-Specific Type for Page Translations ---
+// --- UI-Specific Type for Page Translations ---
 export type Translations = {
     en: {
         checklistTitle: string;
     };
     bn: {
-        checklistTitle: string;
-        [key: string]: string; // Allows for any string key for section titles
+        checklistTitle:string;
+        [key: string]: string; 
     };
 };
