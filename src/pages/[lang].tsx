@@ -1,14 +1,15 @@
-
+// FILE: src/pages/[lang].tsx
 
 import type { GetStaticProps, GetStaticPaths, InferGetStaticPropsType } from 'next';
 import Head from 'next/head';
-import Image from 'next/image';
 import { useRouter } from 'next/router';
 
-
+// Import all necessary types
 import type { CourseData, Section, Translations, SeoMetaTag } from '@/types/course';
 
-// Import All reusable components
+// Import ALL reusable components
+import Navbar from '@/components/Navbar'; // <-- IMPORT THE NEW NAVBAR
+import Hero from '@/components/Hero';
 import Trailer from '@/components/Trailer';
 import Checklist from '@/components/Checklist';
 import CTA from '@/components/CTA';
@@ -19,13 +20,6 @@ import About from '@/components/About';
 import FeatureExplanations from '@/components/FeatureExplanations';
 import Testimonials from '@/components/Testimonials';
 import Faq from '@/components/Faq';
-
-// --- Icon Components ---
-const GlobeIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2h1a2 2 0 002-2v-1a2 2 0 012-2h1.945M7.884 5.056a2 2 0 013.132 0l1.414 1.414a2 2 0 010 3.132l-1.414 1.414a2 2 0 01-3.132 0l-1.414-1.414a2 2 0 010-3.132zM12 21a9 9 0 100-18 9 9 0 000 18z" />
-    </svg>
-);
 
 
 // --- DynamicSection with Translation and Component-Routing Logic ---
@@ -58,7 +52,7 @@ const DynamicSection = ({ section, lang, translations }: { section: Section; lan
   const useWrapper = !['about', 'faq'].includes(section.type);
 
   return (
-    <div className="py-8">
+    <div className="py-4">
       {title && <h2 className="text-3xl font-bold mb-6 text-gray-800">{title}</h2>}
       {useWrapper ? (
          <div className="p-6 bg-slate-50 rounded-lg shadow-sm">
@@ -115,72 +109,50 @@ export default function CoursePage({ courseData }: InferGetStaticPropsType<typeo
         <meta property="og:image" content={courseData.seo.image} />
       </Head>
 
-      <main className="font-sans bg-white">
-        {/* --- START: HERO SECTION --- */}
-        <div className="relative w-full text-white overflow-hidden">
-          {/* Layer 1: Background Image */}
-          <Image
-            src="https://cdn.10minuteschool.com/images/ui_%281%29_1716445506383.jpeg"
-            alt="IELTS Course Banner"
-            fill
-            className="object-cover"
-            priority
-          />
-          {/* Layer 2: THE GRADIENT OVERLAY */}
-          <div 
-            className="absolute inset-0 bg-gradient-to-b from-black/70 to-transparent" 
-            aria-hidden="true" 
+      {/* Changed bg-white to bg-gray-50 for a slightly off-white background */}
+      <div className="font-sans bg-gray-50">
+        <Navbar 
+          currentLang={lang}
+          onLanguageToggle={handleLanguageToggle}
+        />
+        <main>
+          <Hero 
+            title={courseData.title}
+            description={courseData.description}
+            backgroundImage="https://cdn.10minuteschool.com/images/ui_%281%29_1716445506383.jpeg"
           />
 
-          {/* Layer 3: Text Content */}
-          <div className="relative container mx-auto px-4 py-24 md:py-32 text-center">
-            <h1 className="text-4xl md:text-6xl font-extrabold text-white leading-tight">
-              {courseData.title}
-            </h1>
-            <div 
-              className="mt-4 max-w-3xl mx-auto text-lg text-white/90 prose prose-invert" 
-              dangerouslySetInnerHTML={{ __html: courseData.description }} 
-            />
+          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-16">
+                  
+                  {/* --- LEFT COLUMN --- */}
+                  {/* -mt-24 pulls this column's content up slightly to create a small overlap */}
+                  <div className="lg:col-span-2 space-y-4 -mt-24">
+                      {/* This empty div with height acts as a spacer, pushing content down below the navbar area */}
+                      <div className="h-24"></div> 
+                      {courseData.sections.map((section, index) => (
+                      <DynamicSection
+                          key={index}
+                          section={section}
+                          lang={lang}
+                          translations={translations}
+                      />
+                      ))}
+                  </div>
+
+                  {/* --- RIGHT COLUMN (ABSOLUTELY POSITIONED) --- */}
+                  <div className="lg:absolute lg:top-0 lg:right-0 lg:w-1/3 lg:-mt-24 px-4 sm:px-6 lg:px-8 space-y-6">
+                      {trailerUrl && <Trailer videoUrl={trailerUrl} />}
+                      <CTA ctaText={courseData.cta_text.name} price={3850} />
+                      
+                      {courseData.checklist?.length > 0 && (
+                      <Checklist title={t.checklistTitle} items={courseData.checklist} />
+                      )}
+                  </div>
+              </div>
           </div>
-        </div>
-        {/* --- END: HERO SECTION --- */}
-
-        {/* --- START: MAIN CONTENT AREA --- */}
-        <div className="container mx-auto p-4 md:p-8">
-            <div className="flex justify-end mb-4">
-                <button
-                    onClick={handleLanguageToggle}
-                    className="flex items-center space-x-2 rounded-md border border-slate-300 bg-slate-100 px-3 py-1.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
-                    aria-label="Toggle language"
-                >
-                    <GlobeIcon />
-                    <span>{lang.toUpperCase()}</span>
-                </button>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-            <div className="lg:col-span-2 space-y-4">
-                {courseData.sections.map((section, index) => (
-                <DynamicSection
-                    key={index}
-                    section={section}
-                    lang={lang}
-                    translations={translations}
-                />
-                ))}
-            </div>
-
-            <div className="lg:col-span-1 space-y-6 lg:sticky lg:top-8 self-start">
-                {trailerUrl && <Trailer videoUrl={trailerUrl} />}
-                <CTA ctaText={courseData.cta_text.name} price={3850} />
-                
-                {courseData.checklist?.length > 0 && (
-                <Checklist title={t.checklistTitle} items={courseData.checklist} />
-                )}
-            </div>
-            </div>
-        </div>
-      </main>
+        </main>
+      </div>
     </>
   );
 }
