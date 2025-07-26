@@ -1,13 +1,14 @@
-// FILE: src/pages/[lang].tsx
+
 
 import type { GetStaticProps, GetStaticPaths, InferGetStaticPropsType } from 'next';
 import Head from 'next/head';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 
-// Import all necessary types
-import type { CourseData, Section, Instructor, Translations, SeoMetaTag } from '@/types/course';
 
+import type { CourseData, Section, Translations, SeoMetaTag } from '@/types/course';
 
+// Import All reusable components
 import Trailer from '@/components/Trailer';
 import Checklist from '@/components/Checklist';
 import CTA from '@/components/CTA';
@@ -18,7 +19,6 @@ import About from '@/components/About';
 import FeatureExplanations from '@/components/FeatureExplanations';
 import Testimonials from '@/components/Testimonials';
 import Faq from '@/components/Faq';
-
 
 // --- Icon Components ---
 const GlobeIcon = () => (
@@ -40,7 +40,6 @@ const DynamicSection = ({ section, lang, translations }: { section: Section; lan
   }
 
   const renderSectionContent = () => {
-    // With the corrected types, this switch statement will now work without errors.
     switch (section.type) {
       case 'instructors': return <Instructors instructors={section.values} />;
       case 'features': return <Features features={section.values} />;
@@ -116,41 +115,70 @@ export default function CoursePage({ courseData }: InferGetStaticPropsType<typeo
         <meta property="og:image" content={courseData.seo.image} />
       </Head>
 
-      <main className="font-sans container mx-auto p-4 md:p-8 bg-white">
-        <div className="flex justify-end mb-4">
-            <button
-                onClick={handleLanguageToggle}
-                className="flex items-center space-x-2 rounded-md border border-slate-300 bg-slate-100 px-3 py-1.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
-                aria-label="Toggle language"
-            >
-                <GlobeIcon />
-                <span>{lang.toUpperCase()}</span>
-            </button>
+      <main className="font-sans bg-white">
+        {/* --- START: HERO SECTION --- */}
+        <div className="relative w-full text-white overflow-hidden">
+          {/* Layer 1: Background Image */}
+          <Image
+            src="https://cdn.10minuteschool.com/images/ui_%281%29_1716445506383.jpeg"
+            alt="IELTS Course Banner"
+            fill
+            className="object-cover"
+            priority
+          />
+          {/* Layer 2: THE GRADIENT OVERLAY */}
+          <div 
+            className="absolute inset-0 bg-gradient-to-b from-black/70 to-transparent" 
+            aria-hidden="true" 
+          />
+
+          {/* Layer 3: Text Content */}
+          <div className="relative container mx-auto px-4 py-24 md:py-32 text-center">
+            <h1 className="text-4xl md:text-6xl font-extrabold text-white leading-tight">
+              {courseData.title}
+            </h1>
+            <div 
+              className="mt-4 max-w-3xl mx-auto text-lg text-white/90 prose prose-invert" 
+              dangerouslySetInnerHTML={{ __html: courseData.description }} 
+            />
+          </div>
         </div>
+        {/* --- END: HERO SECTION --- */}
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-          <div className="lg:col-span-2 space-y-4">
-            <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900">{courseData.title}</h1>
-            <div className="prose max-w-none text-gray-700" dangerouslySetInnerHTML={{ __html: courseData.description }} />
-            
-            {courseData.sections.map((section, index) => (
-              <DynamicSection
-                key={index}
-                section={section}
-                lang={lang}
-                translations={translations}
-              />
-            ))}
-          </div>
+        {/* --- START: MAIN CONTENT AREA --- */}
+        <div className="container mx-auto p-4 md:p-8">
+            <div className="flex justify-end mb-4">
+                <button
+                    onClick={handleLanguageToggle}
+                    className="flex items-center space-x-2 rounded-md border border-slate-300 bg-slate-100 px-3 py-1.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
+                    aria-label="Toggle language"
+                >
+                    <GlobeIcon />
+                    <span>{lang.toUpperCase()}</span>
+                </button>
+            </div>
 
-          <div className="lg:col-span-1 space-y-6 lg:sticky lg:top-8 self-start">
-            {trailerUrl && <Trailer videoUrl={trailerUrl} />}
-            <CTA ctaText={courseData.cta_text.name} price={3850} />
-            
-            {courseData.checklist?.length > 0 && (
-              <Checklist title={t.checklistTitle} items={courseData.checklist} />
-            )}
-          </div>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            <div className="lg:col-span-2 space-y-4">
+                {courseData.sections.map((section, index) => (
+                <DynamicSection
+                    key={index}
+                    section={section}
+                    lang={lang}
+                    translations={translations}
+                />
+                ))}
+            </div>
+
+            <div className="lg:col-span-1 space-y-6 lg:sticky lg:top-8 self-start">
+                {trailerUrl && <Trailer videoUrl={trailerUrl} />}
+                <CTA ctaText={courseData.cta_text.name} price={3850} />
+                
+                {courseData.checklist?.length > 0 && (
+                <Checklist title={t.checklistTitle} items={courseData.checklist} />
+                )}
+            </div>
+            </div>
         </div>
       </main>
     </>
@@ -158,7 +186,7 @@ export default function CoursePage({ courseData }: InferGetStaticPropsType<typeo
 }
 
 
-// --- Data Fetching with ISR ---
+// --- Data Fetching with ISR (No changes needed) ---
 export const getStaticPaths: GetStaticPaths = async () => {
   return { paths: [{ params: { lang: 'en' } }, { params: { lang: 'bn' } }], fallback: 'blocking' };
 };
