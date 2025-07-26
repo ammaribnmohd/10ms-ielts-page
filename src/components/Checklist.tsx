@@ -11,11 +11,7 @@ export default function Checklist({ title, items }: ChecklistProps) {
     <div className="p-6 border border-gray-200 rounded-lg bg-white">
         <h3 className="text-xl font-bold mb-4 text-gray-800">{title}</h3>
         <ul className="space-y-4">
-            {/* 
-              MODIFICATION: 
-              We are now mapping directly over `items` instead of `visibleItems`.
-              The filter has been removed.
-            */}
+           
             {items.map((item) => (
                 <li key={item.id} className="flex items-center space-x-3">
                     {/* Use next/image to render the icon from the API */}

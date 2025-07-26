@@ -8,7 +8,6 @@ interface InstructorsProps {
 export default function Instructors({ instructors }: InstructorsProps) {
   return (
     <div className="p-6 bg-gray-50 rounded-lg">
-      <h2 className="text-2xl font-bold mb-4">Course Instructors</h2>
       <div className="space-y-4">
         {instructors.map((instructor, index) => (
           <div key={index} className="flex items-center space-x-4">
