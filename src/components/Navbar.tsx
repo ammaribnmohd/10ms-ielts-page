@@ -1,9 +1,8 @@
-// FILE: src/components/Navbar.tsx
 
 import React from 'react';
 import Image from 'next/image';
 
-// --- Icon Components (self-contained within the Navbar) ---
+// --- Icon Components ---
 
 const SearchIcon = () => (
     <svg className="absolute left-3 top-1/2 transform -translate-y-1/2 w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="27" height="24" fill="none" viewBox="0 0 27 24">
@@ -19,7 +18,6 @@ const ChevronDownIcon = () => (
     <svg className="h-4 w-4 text-gray-500 ml-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
 );
 
-// --- THIS IS THE FIX: A dedicated component for the complex language SVG ---
 const LanguageIcon = () => (
     <svg width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
         <g clipPath="url(#clip0_9494_69309)">

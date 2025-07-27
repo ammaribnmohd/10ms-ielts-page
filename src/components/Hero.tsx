@@ -1,4 +1,3 @@
-// FILE: src/components/Hero.tsx
 import Image from 'next/image';
 
 interface HeroProps {

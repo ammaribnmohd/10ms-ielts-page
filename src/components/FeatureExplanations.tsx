@@ -1,4 +1,3 @@
-// FILE: src/components/FeatureExplanations.tsx
 import { FeatureExplanationItem } from "@/types/course";
 import Image from "next/image";
 
@@ -14,14 +13,12 @@ const CheckIcon = () => (
 
 export default function FeatureExplanations({ items }: FeatureExplanationsProps) {
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6 rounded-lg shadow-md">
       {items.map((item, index) => (
-        // This container creates the divider line for all items except the first.
         <div 
           key={index} 
           className={`grid grid-cols-1 md:grid-cols-2 gap-8 items-center ${index > 0 ? 'border-t border-gray-200 pt-6' : ''}`}
         >
-          {/* 1. Text content column. This will always appear on the left. */}
           <div>
             <h3 className="text-2xl font-bold mb-4">{item.title}</h3>
             <ul className="space-y-3">
@@ -34,7 +31,6 @@ export default function FeatureExplanations({ items }: FeatureExplanationsProps)
             </ul>
           </div>
           
-          {/* 2. Image column. This will always appear on the right. */}
           <div className="flex justify-center md:justify-end">
             <Image 
                 src={item.file_url} 

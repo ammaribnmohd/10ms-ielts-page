@@ -1,6 +1,3 @@
-// FILE: src/types/course.ts
-
-// --- Base Types from API Response ---
 
 export interface Media {
   name: string;
@@ -73,7 +70,25 @@ export interface FaqItem {
 
 
 // --- Discriminated Union for Sections ---
-
+export interface GroupJoinEngagementItem {
+  id: string;
+  title: string;
+  title_color: string;
+  description: string;
+  description_color: string;
+  thumbnail: string;
+  top_left_icon_img: string;
+  background: {
+    image: string;
+    primary_color: string;
+    secondary_color: string;
+  };
+  cta: {
+    clicked_url: string;
+    color: string;
+    text: string;
+  };
+}
 interface BaseSection {
   type: string;
   name: string;
@@ -114,9 +129,16 @@ interface FaqSection extends BaseSection {
     values: FaqItem[];
 }
 
-// NOTE: The 'OtherSection' / catch-all has been REMOVED.
-// This makes the union "closed", allowing TypeScript to perform proper type narrowing.
-// Any section types from the API not defined here will now correctly cause a type error during data fetching.
+
+interface GroupJoinEngagementSection extends BaseSection {
+  type: 'group_join_engagement';
+  values: GroupJoinEngagementItem[];
+}
+
+interface FreeItemsSection extends BaseSection {
+    type: 'free_items';
+    values: unknown[]; 
+}
 
 export type Section = 
   | InstructorsSection 
@@ -125,7 +147,9 @@ export type Section =
   | AboutSection
   | FeatureExplanationsSection
   | TestimonialsSection
-  | FaqSection;
+  | FaqSection
+  | GroupJoinEngagementSection
+  | FreeItemsSection;
 
 
 // --- The Main Course Data Structure ---
