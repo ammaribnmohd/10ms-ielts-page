@@ -23,11 +23,11 @@ export default function Hero({ title, description, backgroundImage }: HeroProps)
       <div className="relative mx-auto max-w-7xl px-4 py-24 md:py-32 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-3">
           <div className="lg:col-span-2">
-            <h1 className="text-4xl md:text-5xl font-semibold text-white leading-tight">
+            <h1 className="text-4xl md:text-4xl font-semibold text-white leading-tight">
               {title}
             </h1>
             <div 
-              className="mt-4 text-lg text-neutral-400 prose prose-invert max-w-none" 
+              className="mt-4 text-base text-neutral-400 prose prose-invert max-w-none" 
               dangerouslySetInnerHTML={{ __html: description }} 
             />
           </div>

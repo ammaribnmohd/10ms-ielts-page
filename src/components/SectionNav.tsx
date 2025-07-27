@@ -101,7 +101,7 @@ export default function SectionNav({ items }: SectionNavProps) {
             <ArrowButtonIcon className={`h-8 w-8 transition-opacity duration-200 ${isAtEnd ? 'opacity-25' : ''}`} />
         </button>
       </div>
-      <div className="h-[1px] text-[0]" />
+      <div className="h-2" />
     </div>
   );
 }

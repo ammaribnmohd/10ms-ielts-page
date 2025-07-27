@@ -8,10 +8,15 @@ export default {
     './src/components/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ['var(--font-inter)', 'sans-serif'],
+        bengali: ['var(--font-noto-sans-bengali)', 'sans-serif'],
+      },
+    },
   },
   plugins: [
     typography,
-    aspectRatio, // Add this line
+    aspectRatio,
   ],
 }

@@ -133,7 +133,7 @@ export default function CoursePage({ courseData }: InferGetStaticPropsType<typeo
         <meta property="og:image" content={courseData.seo.image} />
       </Head>
 
-      <div className="font-sans bg-gray-50">
+      <div className={`bg-gray-50 ${lang === 'bn' ? 'font-bengali' : 'font-sans'}`}>
         <Navbar 
           currentLang={lang}
           onLanguageToggle={handleLanguageToggle}
