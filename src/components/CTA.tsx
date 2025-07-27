@@ -1,15 +1,68 @@
 interface CtaProps {
     ctaText: string;
     price: number;
+    originalPrice?: number;
+    discount?: number;
 }
 
-export default function CTA({ ctaText, price }: CtaProps) {
+export default function CTA({ ctaText, price, originalPrice, discount }: CtaProps) {
   return (
-    <div className="p-4 border rounded-lg shadow-md text-center space-y-4">
-        <p className="text-3xl font-bold">Price: ৳{price}</p>
-        <button className="w-full bg-green-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-600 transition-colors duration-300">
-            {ctaText}
-        </button>
+    <div className="w-full p-4" id="variant">
+      <div className="relative">
+        <div>
+          <div className="flex flex-col w-full">
+            <div>
+              <div className="flex items-center justify-between md:flex-col md:items-start">
+                <div className="md:mb-3">
+                  <div className="inline-block text-2xl font-semibold">৳{PRICING_DATA.price}</div>
+                  {PRICING_DATA.originalPrice && (
+                    <span className="inline-flex">
+                      <del className="ml-2 text-base font-normal md:text-xl">৳{PRICING_DATA.originalPrice}</del>
+                      {PRICING_DATA.discount && (
+                        <div className="inline-block">
+                          <p className="bg-orange-500 text-white px-2 py-1 rounded text-sm ml-2">
+                            {PRICING_DATA.discount} ৳ ছাড়
+                          </p>
+                        </div>
+                      )}
+                    </span>
+                  )}
+                </div>
+              </div>
+              <div className="flex items-center justify-between mb-2"></div>
+            </div>
+            <button 
+              className="w-full text-center flex items-center justify-center flex-wrap"
+              style={{
+                backgroundColor: 'rgb(28, 171, 85)',
+                color: 'rgb(255, 255, 255)',
+                borderBottomWidth: '4px',
+                borderColor: 'rgba(0, 0, 0, 0.3)',
+                borderRadius: '6px',
+                padding: '8px 32px',
+                fontSize: '16px',
+                fontWeight: '400',
+                lineHeight: '24px',
+                whiteSpace: 'nowrap',
+                cursor: 'pointer',
+                userSelect: 'none',
+                transition: 'color 0.15s ease-in-out, background-color 0.15s ease-in-out, border 0.15s ease-in-out, box-shadow 0.15s ease-in-out',
+                fontFamily: 'Inter, sans-serif'
+              }}
+            >
+              {PRICING_DATA.ctaText}
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
+
+// Store pricing data internally
+const PRICING_DATA = {
+  price: 3850,
+  originalPrice: 5000,
+  discount: 1150,
+  ctaText: "Enroll"
+};
