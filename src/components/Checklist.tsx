@@ -8,7 +8,7 @@ interface ChecklistProps {
 
 export default function Checklist({ title, items }: ChecklistProps) {
   return (
-    <div className="p-6 border border-gray-200 rounded-lg bg-white">
+    <div className="p-6">
         <h3 className="text-xl font-bold mb-4 text-gray-800">{title}</h3>
         <ul className="space-y-4">
            

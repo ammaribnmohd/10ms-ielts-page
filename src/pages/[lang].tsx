@@ -169,13 +169,23 @@ export default function CoursePage({ courseData }: InferGetStaticPropsType<typeo
 
                   {/* --- RIGHT COLUMN  --- */}
                   <div className="lg:col-span-1">
-                      <div className="lg:sticky lg:top-[140px] h-fit space-y-6 pt-8">
-                          <Trailer mediaItems={courseData.media} />
-                          <CTA ctaText={courseData.cta_text.name} price={3850} />
-                          
-                          {courseData.checklist?.length > 0 && (
-                          <Checklist title={t.checklistTitle} items={courseData.checklist} />
-                          )}
+                      <div className="lg:sticky lg:top-[140px] h-fit pt-8 ">
+                          <div className=" border border-gray-200 shadow-sm overflow-hidden">
+                            <Trailer mediaItems={courseData.media} />
+                            <CTA 
+                              ctaText={courseData.cta_text.name} 
+                              price={3850} 
+                              originalPrice={5000}
+                              discount={1150}
+                            />
+                            
+                            {courseData.checklist?.length > 0 && (
+                              <>
+                                
+                                <Checklist title={t.checklistTitle} items={courseData.checklist} />
+                              </>
+                            )}
+                          </div>
                       </div>
                   </div>
               </div>

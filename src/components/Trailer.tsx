@@ -21,8 +21,6 @@ const PlayIcon = () => (
   </svg>
 );
 
-
-
 export default function Trailer({ mediaItems }: TrailerProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
@@ -64,7 +62,7 @@ export default function Trailer({ mediaItems }: TrailerProps) {
     if (!firstVideo) return <div className="text-center p-4">No media available.</div>;
 
     return (
-      <div className="w-full aspect-video rounded-lg overflow-hidden shadow-lg">
+      <div className="w-full relative aspect-video overflow-hidden">
         <iframe
           src={`https://www.youtube.com/embed/${firstVideo.resource_value}`}
           title="YouTube video player"
@@ -80,9 +78,9 @@ export default function Trailer({ mediaItems }: TrailerProps) {
   const activeItem = galleryItems[activeIndex];
 
   return (
-    <div className="w-full bg-white rounded-lg overflow-hidden shadow-sm border">
+    <div className="w-full">
       {/* Main Display Area */}
-      <div className="relative aspect-video w-full overflow-hidden bg-gray-100" style={{ minHeight: '200px' }}>
+      <div className="relative aspect-video w-full overflow-hidden bg-gray-100 " style={{ minHeight: '200px' }}>
         {activeItem.resource_type === 'video' && isVideoPlaying ? (
           <iframe
             src={`https://www.youtube.com/embed/${activeItem.resource_value}?autoplay=1`}
@@ -144,7 +142,6 @@ export default function Trailer({ mediaItems }: TrailerProps) {
           </>
         )}
       </div>
-
 
       {galleryItems.length > 1 && (
         <div className="p-4 bg-gray-50 border-t">
