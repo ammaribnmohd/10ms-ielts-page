@@ -27,7 +27,7 @@ export default function About({ items }: AboutProps) {
                     <div key={index}>
                         <button
                             onClick={() => handleToggle(index)}
-                            className="w-full flex justify-between items-center p-5 text-left font-semibold text-gray-800 bg-white hover:bg-gray-50"
+                            className="w-full flex justify-between items-center p-5 text-left font-semibold text-gray-800"
                             aria-expanded={isOpen}
                         >
                             <span>{cleanTitle}</span>
