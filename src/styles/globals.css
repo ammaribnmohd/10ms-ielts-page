@@ -4,7 +4,7 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 140px; 
+  scroll-padding-top: 112px;
 }
 
 @layer utilities {
@@ -13,6 +13,56 @@ html {
   }
   .scrollbar-hide {
     -ms-overflow-style: none;
-    scrollbar-width: none; 
+    scrollbar-width: none;
   }
+}
+
+/* Add these styles to your globals.css file */
+
+.compact-sidebar .compact-trailer {
+  /* Reduce trailer component height */
+}
+
+.compact-sidebar .compact-trailer > div {
+  /* Reduce aspect ratio slightly */
+}
+
+.compact-sidebar .compact-trailer .relative[style*="minHeight"] {
+  min-height: 160px !important; /* Reduce from 200px to 160px */
+}
+
+.compact-sidebar .compact-trailer .p-4 {
+  padding: 8px !important; /* Reduce thumbnail section padding */
+}
+
+.compact-sidebar .compact-cta {
+  /* Make CTA section more compact */
+}
+
+.compact-sidebar .compact-cta .w-full.p-4 {
+  padding: 12px !important; /* Reduce from 16px to 12px */
+}
+
+.compact-sidebar .compact-cta .md\\:mb-3 {
+  margin-bottom: 8px !important; /* Reduce margin */
+}
+
+.compact-sidebar .compact-checklist {
+  /* Make checklist more compact */
+}
+
+.compact-sidebar .compact-checklist .p-6 {
+  padding: 16px !important; /* Reduce from 24px to 16px */
+}
+
+.compact-sidebar .compact-checklist .mb-4 {
+  margin-bottom: 12px !important; /* Reduce title margin */
+}
+
+.compact-sidebar .compact-checklist .space-y-4 > * + * {
+  margin-top: 12px !important; /* Reduce space between checklist items */
+}
+
+.compact-sidebar .compact-checklist .text-xl {
+  font-size: 18px !important; /* Slightly smaller title */
 }

@@ -1,11 +1,17 @@
+// src/components/CTA.tsx
+
 interface CtaProps {
     ctaText: string;
-    price: number;
-    originalPrice?: number;
-    discount?: number;
 }
 
-export default function CTA({ ctaText, price, originalPrice, discount }: CtaProps) {
+// Store pricing data internally and hardcode it here.
+const PRICING_DATA = {
+  price: 3850,
+  originalPrice: 5000,
+  discount: 1150,
+};
+
+export default function CTA({ ctaText }: CtaProps) {
   return (
     <div className="w-full p-4" id="variant">
       <div className="relative">
@@ -31,26 +37,26 @@ export default function CTA({ ctaText, price, originalPrice, discount }: CtaProp
               </div>
               <div className="flex items-center justify-between mb-2"></div>
             </div>
-            <button 
+            <button
               className="w-full text-center flex items-center justify-center flex-wrap"
               style={{
                 backgroundColor: 'rgb(28, 171, 85)',
                 color: 'rgb(255, 255, 255)',
                 borderBottomWidth: '4px',
                 borderColor: 'rgba(0, 0, 0, 0.3)',
-                borderRadius: '6px',
-                padding: '8px 32px',
-                fontSize: '16px',
-                fontWeight: '400',
+                borderRadius: '8px',
+                padding: '12px 32px',
+                fontSize: '18px',
+                fontWeight: '600',
                 lineHeight: '24px',
                 whiteSpace: 'nowrap',
                 cursor: 'pointer',
                 userSelect: 'none',
                 transition: 'color 0.15s ease-in-out, background-color 0.15s ease-in-out, border 0.15s ease-in-out, box-shadow 0.15s ease-in-out',
-                fontFamily: 'Inter, sans-serif'
+                fontFamily: 'inherit'
               }}
             >
-              {PRICING_DATA.ctaText}
+              {ctaText}
             </button>
           </div>
         </div>
@@ -58,11 +64,3 @@ export default function CTA({ ctaText, price, originalPrice, discount }: CtaProp
     </div>
   )
 }
-
-// Store pricing data internally
-const PRICING_DATA = {
-  price: 3850,
-  originalPrice: 5000,
-  discount: 1150,
-  ctaText: "Enroll"
-};

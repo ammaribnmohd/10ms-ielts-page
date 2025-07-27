@@ -1,3 +1,5 @@
+// src/pages/[lang].tsx
+
 import type { GetStaticProps, GetStaticPaths, InferGetStaticPropsType } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -8,7 +10,7 @@ import type { CourseData, Section, Translations, SeoMetaTag } from '@/types/cour
 // Import ALL reusable components
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
-import SectionNav from '@/components/SectionNav'; 
+import SectionNav from '@/components/SectionNav';
 import Trailer from '@/components/Trailer';
 import Checklist from '@/components/Checklist';
 import CTA from '@/components/CTA';
@@ -31,8 +33,8 @@ const DynamicSection = ({ section, lang, translations, id }: { section: Section;
   if ((!section.values || section.values.length === 0) && section.type !== 'free_items') {
     return null;
   }
-  
-  let title = section.name; 
+
+  let title = section.name;
   if (lang === 'bn' && translations.bn[section.name]) {
       title = translations.bn[section.name];
   }
@@ -48,7 +50,7 @@ const DynamicSection = ({ section, lang, translations, id }: { section: Section;
       case 'testimonials': return <Testimonials items={section.values} />;
       case 'group_join_engagement': return <GroupJoinEngagement items={section.values} />;
       case 'free_items': return <FreeItems />;
-      default: 
+      default:
         const _exhaustiveCheck: never = section;
         return null;
     }
@@ -58,7 +60,7 @@ const DynamicSection = ({ section, lang, translations, id }: { section: Section;
   if (!content) return null;
 
   const useWrapper = !['about', 'faq', 'group_join_engagement', 'free_items','instructor', 'features','feature_explanations', 'testimonials'].includes(section.type);
-  
+
   // Conditionally add min-w-0 for the testimonials section to fix the grid/flex overflow issue
 
   return (
@@ -82,7 +84,7 @@ const DynamicSection = ({ section, lang, translations, id }: { section: Section;
 export default function CoursePage({ courseData }: InferGetStaticPropsType<typeof getStaticProps>) {
   const router = useRouter();
   if (router.isFallback) return <div>Loading page...</div>;
-  
+
   const handleLanguageToggle = () => {
     const newLang = router.query.lang === 'en' ? 'bn' : 'en';
     router.push(`/${newLang}`);
@@ -100,7 +102,7 @@ export default function CoursePage({ courseData }: InferGetStaticPropsType<typeo
       bn: {
           checklistTitle: 'এই কোর্সে যা থাকছে',
           "Course instructor": "কোর্স ইন্সট্রাক্টর",
-          "How the course is laid out": "কোর্সটি যেভাবে সাজানো হয়েছে",
+          "How the course is laid out": "কোর্সটি যেভাবে সাজানো হয়েছে",
           "What you will learn by doing the course": "কোর্সটি করে যা শিখবেন",
           "Course details": "কোর্স সম্পর্কে বিস্তারিত",
           "Course Exclusive Feature": "কোর্স এক্সক্লুসিভ ফিচার",
@@ -115,7 +117,7 @@ export default function CoursePage({ courseData }: InferGetStaticPropsType<typeo
     .filter(section => section.name && ['instructors', 'features', 'pointers', 'about', 'feature_explanations', 'free_items', 'testimonials', 'faq'].includes(section.type))
     .map(section => {
         const translatedName = lang === 'bn' && translations.bn[section.name] ? translations.bn[section.name] : section.name;
-        
+
         return {
             name: translatedName,
             id: slugify(section.name)
@@ -134,26 +136,24 @@ export default function CoursePage({ courseData }: InferGetStaticPropsType<typeo
       </Head>
 
       <div className={`bg-gray-50 ${lang === 'bn' ? 'font-bengali' : 'font-sans'}`}>
-        <Navbar 
+        <Navbar
           currentLang={lang}
           onLanguageToggle={handleLanguageToggle}
         />
         <main>
-          <Hero 
+          <Hero
             title={courseData.title}
             description={courseData.description}
             backgroundImage="https://cdn.10minuteschool.com/images/ui_%281%29_1716445506383.jpeg"
           />
 
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-16">
-                  
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-x-16">
+
                   {/* --- LEFT COLUMN --- */}
-                  <div className="lg:col-span-2">
+                  <div className="md:col-span-2">
                       <SectionNav items={navItems} />
-
-                      <div className="h-8" /> 
-
+                      <div className="h-8" />
                       <div>
                         {courseData.sections.map((section, index) => (
                         <DynamicSection
@@ -168,22 +168,15 @@ export default function CoursePage({ courseData }: InferGetStaticPropsType<typeo
                   </div>
 
                   {/* --- RIGHT COLUMN  --- */}
-                  <div className="lg:col-span-1">
-                      <div className="lg:sticky lg:top-[140px] h-fit pt-8 ">
-                          <div className=" border border-gray-200 shadow-sm overflow-hidden">
+                  <div className="md:col-span-1">
+                      <div className="md:sticky md:top-[50px] h-fit md:-mt-72">
+                          <div className="border border-gray-200 shadow-sm overflow-hidden   bg-gray-50">
                             <Trailer mediaItems={courseData.media} />
-                            <CTA 
-                              ctaText={courseData.cta_text.name} 
-                              price={3850} 
-                              originalPrice={5000}
-                              discount={1150}
+                            <CTA
+                              ctaText={lang === 'bn' ? 'কোর্সটি কিনুন' : courseData.cta_text.name}
                             />
-                            
                             {courseData.checklist?.length > 0 && (
-                              <>
-                                
-                                <Checklist title={t.checklistTitle} items={courseData.checklist} />
-                              </>
+                              <Checklist title={t.checklistTitle} items={courseData.checklist} />
                             )}
                           </div>
                       </div>

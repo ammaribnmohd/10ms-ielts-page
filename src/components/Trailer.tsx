@@ -80,7 +80,7 @@ export default function Trailer({ mediaItems }: TrailerProps) {
   return (
     <div className="w-full">
       {/* Main Display Area */}
-      <div className="relative aspect-video w-full overflow-hidden bg-gray-100 " style={{ minHeight: '200px' }}>
+      <div className="relative aspect-video overflow-hidden bg-gray-100 mt-1 ml-1 mr-1" style={{ minHeight: '200px' }}>
         {activeItem.resource_type === 'video' && isVideoPlaying ? (
           <iframe
             src={`https://www.youtube.com/embed/${activeItem.resource_value}?autoplay=1`}
