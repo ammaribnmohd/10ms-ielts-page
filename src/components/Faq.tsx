@@ -1,5 +1,4 @@
-// FILE: src/components/Faq.tsx
-'use client'; // This component also uses state
+'use client'; 
 import { useState } from 'react';
 import { FaqItem } from "@/types/course";
 

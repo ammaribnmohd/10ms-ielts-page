@@ -1,4 +1,3 @@
-// src/pages/index.tsx
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 
@@ -7,7 +6,7 @@ const HomeRedirect = () => {
   useEffect(() => {
     router.replace('/en');
   }, [router]);
-  return null; // Render nothing while redirecting
+  return null; 
 };
 
 export default HomeRedirect;

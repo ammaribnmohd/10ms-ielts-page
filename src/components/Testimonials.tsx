@@ -1,4 +1,3 @@
-// FILE: src/components/Testimonials.tsx
 import { TestimonialItem } from "@/types/course";
 import Image from "next/image";
 

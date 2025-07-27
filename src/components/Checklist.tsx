@@ -14,10 +14,9 @@ export default function Checklist({ title, items }: ChecklistProps) {
            
             {items.map((item) => (
                 <li key={item.id} className="flex items-center space-x-3">
-                    {/* Use next/image to render the icon from the API */}
                     <Image
                       src={item.icon}
-                      alt="" // Alt text is empty for decorative icons
+                      alt="" 
                       width={24}
                       height={24}
                       className="flex-shrink-0"

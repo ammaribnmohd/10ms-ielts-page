@@ -1,8 +1,8 @@
     interface TrailerProps {
-  videoUrl: string; // e.g., "https://www.youtube.com/watch?v=VIDEO_ID"
+  videoUrl: string; 
 }
 
-// A simple utility to extract YouTube video ID from various URL formats
+// utility to extract YouTube video ID from various URL formats
 const getYouTubeID = (url: string): string | null => {
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
     const match = url.match(regExp);

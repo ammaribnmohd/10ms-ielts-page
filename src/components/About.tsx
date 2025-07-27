@@ -1,5 +1,4 @@
-// FILE: src/components/About.tsx
-'use client'; // This component uses state, so it's a client component
+'use client'; 
 import { useState } from 'react';
 import { AboutItem } from "@/types/course";
 
@@ -14,7 +13,7 @@ interface AboutProps {
 }
 
 export default function About({ items }: AboutProps) {
-    const [activeIndex, setActiveIndex] = useState<number | null>(0); // Open first item by default
+    const [activeIndex, setActiveIndex] = useState<number | null>(0); 
     const handleToggle = (index: number) => {
         setActiveIndex(activeIndex === index ? null : index);
     };
