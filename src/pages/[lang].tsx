@@ -3,6 +3,7 @@
 import type { GetStaticProps, GetStaticPaths, InferGetStaticPropsType } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import { useState, useEffect, useRef } from 'react'; // React hooks are already here
 
 // Import all necessary types
 import type { CourseData, Section, Translations, SeoMetaTag } from '@/types/course';
@@ -61,8 +62,6 @@ const DynamicSection = ({ section, lang, translations, id }: { section: Section;
 
   const useWrapper = !['about', 'faq', 'group_join_engagement', 'free_items','instructor', 'features','feature_explanations', 'testimonials'].includes(section.type);
 
-  // Conditionally add min-w-0 for the testimonials section to fix the grid/flex overflow issue
-
   return (
     <div id={id} className="scroll-mt-[140px] pb-12">
       {title && !['group_join_engagement'].includes(section.type) && (
@@ -83,6 +82,33 @@ const DynamicSection = ({ section, lang, translations, id }: { section: Section;
 // --- Main Page Component ---
 export default function CoursePage({ courseData }: InferGetStaticPropsType<typeof getStaticProps>) {
   const router = useRouter();
+  
+  // --- START: MODIFIED STATE AND SCROLL LOGIC ---
+  const [isSidebarCompact, setIsSidebarCompact] = useState(false);
+  const stickyWrapperRef = useRef<HTMLDivElement>(null); // Ref for the sidebar's sticky container
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (stickyWrapperRef.current) {
+        const stickyOffset = 96; // Corresponds to `top-24` (6rem * 16px/rem = 96px)
+        const elementTop = stickyWrapperRef.current.getBoundingClientRect().top;
+        
+        // When the element's top position reaches the sticky offset, make it compact.
+        if (elementTop <= stickyOffset) {
+          setIsSidebarCompact(true);
+        } else {
+          setIsSidebarCompact(false);
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Check on initial load
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []); // The effect runs once on mount
+  // --- END: MODIFIED STATE AND SCROLL LOGIC ---
+
   if (router.isFallback) return <div>Loading page...</div>;
 
   const handleLanguageToggle = () => {
@@ -92,7 +118,6 @@ export default function CoursePage({ courseData }: InferGetStaticPropsType<typeo
 
   const lang = (router.query.lang as 'en' | 'bn') || 'en';
 
-  // Place the data check after the hooks to avoid breaking React's rules
   if (!courseData) return <div>Error loading course data. Please try again later.</div>;
 
   const translations: Translations = {
@@ -141,11 +166,14 @@ export default function CoursePage({ courseData }: InferGetStaticPropsType<typeo
           onLanguageToggle={handleLanguageToggle}
         />
         <main>
-          <Hero
-            title={courseData.title}
-            description={courseData.description}
-            backgroundImage="https://cdn.10minuteschool.com/images/ui_%281%29_1716445506383.jpeg"
-          />
+          {/* Hero section no longer needs a ref */}
+          <div>
+            <Hero
+              title={courseData.title}
+              description={courseData.description}
+              backgroundImage="https://cdn.10minuteschool.com/images/ui_%281%29_1716445506383.jpeg"
+            />
+          </div>
 
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-x-16">
@@ -169,9 +197,11 @@ export default function CoursePage({ courseData }: InferGetStaticPropsType<typeo
 
                   {/* --- RIGHT COLUMN  --- */}
                   <div className="md:col-span-1">
-                      <div className="md:sticky md:top-[50px] h-fit md:-mt-72">
-                          <div className="border border-gray-200 shadow-sm overflow-hidden   bg-gray-50">
-                            <Trailer mediaItems={courseData.media} />
+                      {/* --- MODIFICATION: Added ref to this sticky container --- */}
+                      <div ref={stickyWrapperRef} className={`md:sticky md:top-24 h-fit transition-all duration-300 ${isSidebarCompact ? 'md:mt-0' : 'md:-mt-72'}`}>
+                          <div className="border border-gray-200 overflow-hidden bg-gray-50">
+                            {/* Trailer is still conditionally rendered */}
+                            {!isSidebarCompact && <Trailer mediaItems={courseData.media} />}
                             <CTA
                               ctaText={lang === 'bn' ? 'কোর্সটি কিনুন' : courseData.cta_text.name}
                             />
@@ -190,7 +220,7 @@ export default function CoursePage({ courseData }: InferGetStaticPropsType<typeo
 }
 
 
-// --- Data Fetching with ISR  ---
+// --- Data Fetching with ISR (No changes here) ---
 export const getStaticPaths: GetStaticPaths = async () => {
   return { paths: [{ params: { lang: 'en' } }, { params: { lang: 'bn' } }], fallback: 'blocking' };
 };

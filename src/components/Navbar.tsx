@@ -69,10 +69,7 @@ const Navbar = ({ currentLang, onLanguageToggle }: NavbarProps) => {
                     </a>
                 ))}
              </div>
-             <a href="#" className="hidden xl:flex items-center space-x-2 text-green-500   hover:opacity-80 transition-opacity">
-                <PhoneIcon />
-                <span>16910</span>
-             </a>
+            
             <button
                 onClick={onLanguageToggle}
                 className="flex items-center space-x-2 rounded-md border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100"
@@ -81,6 +78,10 @@ const Navbar = ({ currentLang, onLanguageToggle }: NavbarProps) => {
                 <LanguageIcon />
                 <span>{currentLang === 'en' ? 'বাং' : 'EN'}</span>
             </button>
+             <a href="#" className="hidden xl:flex items-center space-x-2 text-green-500   hover:opacity-80 transition-opacity">
+                <PhoneIcon />
+                <span>16910</span>
+             </a>
             <a href="#" className="rounded-md bg-green-500 px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-600 transition-colors">{t.login}</a>
           </div>
         </div>
