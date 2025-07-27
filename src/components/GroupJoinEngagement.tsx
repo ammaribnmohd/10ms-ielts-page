@@ -1,4 +1,3 @@
-
 import { GroupJoinEngagementItem } from '@/types/course';
 import Image from 'next/image';
 
@@ -24,6 +23,7 @@ export default function GroupJoinEngagement({ items }: GroupJoinEngagementProps)
         src={item.background.image}
         alt="" 
         fill
+        sizes="100vw"
         className="object-cover z-0"
         priority 
       />

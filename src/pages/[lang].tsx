@@ -1,4 +1,3 @@
-
 import type { GetStaticProps, GetStaticPaths, InferGetStaticPropsType } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -58,10 +57,12 @@ const DynamicSection = ({ section, lang, translations, id }: { section: Section;
   const content = renderSectionContent();
   if (!content) return null;
 
-  const useWrapper = !['about', 'faq', 'group_join_engagement', 'free_items','instructor', 'features','feature_explanations'].includes(section.type);
+  const useWrapper = !['about', 'faq', 'group_join_engagement', 'free_items','instructor', 'features','feature_explanations', 'testimonials'].includes(section.type);
+  
+  // Conditionally add min-w-0 for the testimonials section to fix the grid/flex overflow issue
 
   return (
-    <div id={id} className="scroll-mt-[140px]">
+    <div id={id} className="scroll-mt-[140px] pb-12">
       {title && !['group_join_engagement'].includes(section.type) && (
         <h2 className="text-3xl font-bold mb-6 text-gray-800">{title}</h2>
       )}
@@ -81,10 +82,6 @@ const DynamicSection = ({ section, lang, translations, id }: { section: Section;
 export default function CoursePage({ courseData }: InferGetStaticPropsType<typeof getStaticProps>) {
   const router = useRouter();
   if (router.isFallback) return <div>Loading page...</div>;
-  if (!courseData) return <div>Error loading course data. Please try again later.</div>;
-  
-  const trailerVideo = courseData.media.find(m => m.resource_type === 'video');
-  const trailerUrl = trailerVideo ? `https://www.youtube.com/watch?v=${trailerVideo.resource_value}` : '';
   
   const handleLanguageToggle = () => {
     const newLang = router.query.lang === 'en' ? 'bn' : 'en';
@@ -92,6 +89,9 @@ export default function CoursePage({ courseData }: InferGetStaticPropsType<typeo
   };
 
   const lang = (router.query.lang as 'en' | 'bn') || 'en';
+
+  // Place the data check after the hooks to avoid breaking React's rules
+  if (!courseData) return <div>Error loading course data. Please try again later.</div>;
 
   const translations: Translations = {
       en: {
@@ -154,7 +154,7 @@ export default function CoursePage({ courseData }: InferGetStaticPropsType<typeo
 
                       <div className="h-8" /> 
 
-                      <div className="space-y-4">
+                      <div>
                         {courseData.sections.map((section, index) => (
                         <DynamicSection
                             key={index}
@@ -170,7 +170,7 @@ export default function CoursePage({ courseData }: InferGetStaticPropsType<typeo
                   {/* --- RIGHT COLUMN  --- */}
                   <div className="lg:col-span-1">
                       <div className="lg:sticky lg:top-[140px] h-fit space-y-6 pt-8">
-                          {trailerUrl && <Trailer videoUrl={trailerUrl} />}
+                          <Trailer mediaItems={courseData.media} />
                           <CTA ctaText={courseData.cta_text.name} price={3850} />
                           
                           {courseData.checklist?.length > 0 && (

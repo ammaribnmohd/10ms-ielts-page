@@ -57,10 +57,13 @@ export interface FeatureExplanationItem {
 }
 
 export interface TestimonialItem {
+    id: string;
     name: string;
     description: string;
     profile_image: string;
     testimonial: string;
+    thumb?:string; 
+    video_url?: string; 
 }
 
 export interface FaqItem {
