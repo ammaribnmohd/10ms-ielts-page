@@ -79,8 +79,7 @@ export default function Trailer({ mediaItems }: TrailerProps) {
 
   return (
     <div className="w-full">
-      {/* Main Display Area */}
-      <div className="relative aspect-video overflow-hidden bg-gray-100 mt-1 ml-1 mr-1" style={{ minHeight: '200px' }}>
+      <div className="relative aspect-video overflow-hidden bg-gray-50 mt-1 ml-1 mr-1" style={{ minHeight: '200px' }}>
         {activeItem.resource_type === 'video' && isVideoPlaying ? (
           <iframe
             src={`https://www.youtube.com/embed/${activeItem.resource_value}?autoplay=1`}
@@ -93,7 +92,7 @@ export default function Trailer({ mediaItems }: TrailerProps) {
           />
         ) : (
           <>
-            <img
+            <Image
               src={
                 activeItem.resource_type === 'video'
                   ? activeItem.thumbnail_url
@@ -101,22 +100,22 @@ export default function Trailer({ mediaItems }: TrailerProps) {
               }
               alt={activeItem.resource_type === 'video' ? 'Video thumbnail' : 'Gallery image'}
               className="absolute inset-0 w-full h-full object-cover"
+              fill
               onError={(e) => {
                 console.error('Image failed to load:', activeItem.resource_type === 'video' ? activeItem.thumbnail_url : activeItem.resource_value);
                 e.currentTarget.style.display = 'none';
               }}
             />
 
-            {/* Play button overlay for videos */}
             {activeItem.resource_type === 'video' && (
               <button
                 onClick={handlePlayVideo}
-                className="absolute inset-0 flex items-center justify-center bg-black/20 transition-all duration-300 hover:bg-black/30 group z-10"
+                className="absolute inset-0 flex items-center justify-center  transition-all duration-300 group z-10"
                 aria-label="Play video"
               >
                 <div className="transform transition-transform duration-300 group-hover:scale-105">
                   <PlayIcon />
-                </div>
+                </div> 
               </button>
             )}
           </>
@@ -144,16 +143,16 @@ export default function Trailer({ mediaItems }: TrailerProps) {
       </div>
 
       {galleryItems.length > 1 && (
-        <div className="p-4 bg-gray-50 border-t">
+        <div className="p-4 border-t border-white/10">
           <div className="flex gap-2 overflow-x-auto scroll-smooth pb-2 scrollbar-hide">
             {galleryItems.map((item, index) => (
               <button
                 key={`${item.resource_value}-${index}`}
                 ref={(el) => { thumbnailRefs.current[index] = el; }}
                 onClick={() => handleThumbnailClick(index)}
-                className={`relative flex-shrink-0 w-14 h-10 rounded-md overflow-hidden border-2 transition-all duration-300 hover:scale-105 ${activeIndex === index
+                className={`relative flex-shrink-0 w-14 h-10 overflow-hidden border-2 transition-all duration-300 hover:scale-105 ${activeIndex === index
                     ? 'border-green-500 shadow-md'
-                    : 'border-gray-200 hover:border-gray-300'
+                    : 'border-transparent hover:border-gray-300' 
                   }`}
               >
                 <Image

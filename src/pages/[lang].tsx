@@ -1,9 +1,9 @@
-// src/pages/[lang].tsx
+
 
 import type { GetStaticProps, GetStaticPaths, InferGetStaticPropsType } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useState, useEffect, useRef } from 'react'; // React hooks are already here
+import { useState, useEffect, useRef } from 'react';
 
 // Import all necessary types
 import type { CourseData, Section, Translations, SeoMetaTag } from '@/types/course';
@@ -79,21 +79,22 @@ const DynamicSection = ({ section, lang, translations, id }: { section: Section;
 };
 
 
-// --- Main Page Component ---
+
 export default function CoursePage({ courseData }: InferGetStaticPropsType<typeof getStaticProps>) {
   const router = useRouter();
   
-  // --- START: MODIFIED STATE AND SCROLL LOGIC ---
   const [isSidebarCompact, setIsSidebarCompact] = useState(false);
-  const stickyWrapperRef = useRef<HTMLDivElement>(null); // Ref for the sidebar's sticky container
+  const stickyWrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
+      if (window.innerWidth < 768) {
+        setIsSidebarCompact(false);
+        return;
+      }
       if (stickyWrapperRef.current) {
-        const stickyOffset = 96; // Corresponds to `top-24` (6rem * 16px/rem = 96px)
+        const stickyOffset = 96;
         const elementTop = stickyWrapperRef.current.getBoundingClientRect().top;
-        
-        // When the element's top position reaches the sticky offset, make it compact.
         if (elementTop <= stickyOffset) {
           setIsSidebarCompact(true);
         } else {
@@ -103,11 +104,14 @@ export default function CoursePage({ courseData }: InferGetStaticPropsType<typeo
     };
 
     window.addEventListener('scroll', handleScroll);
-    handleScroll(); // Check on initial load
+    window.addEventListener('resize', handleScroll);
+    handleScroll(); 
 
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []); // The effect runs once on mount
-  // --- END: MODIFIED STATE AND SCROLL LOGIC ---
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
+  }, []);
 
   if (router.isFallback) return <div>Loading page...</div>;
 
@@ -166,52 +170,59 @@ export default function CoursePage({ courseData }: InferGetStaticPropsType<typeo
           onLanguageToggle={handleLanguageToggle}
         />
         <main>
-          {/* Hero section no longer needs a ref */}
-          <div>
-            <Hero
-              title={courseData.title}
-              description={courseData.description}
-              backgroundImage="https://cdn.10minuteschool.com/images/ui_%281%29_1716445506383.jpeg"
-            />
-          </div>
+          <Hero
+            title={courseData.title}
+            description={courseData.description}
+            backgroundImage="https://cdn.10minuteschool.com/images/ui_%281%29_1716445506383.jpeg"
+            mediaItems={courseData.media}
+          />
 
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-x-16">
-
-                  {/* --- LEFT COLUMN --- */}
-                  <div className="md:col-span-2">
-                      <SectionNav items={navItems} />
-                      <div className="h-8" />
-                      <div>
-                        {courseData.sections.map((section, index) => (
-                        <DynamicSection
-                            key={index}
-                            section={section}
-                            lang={lang}
-                            translations={translations}
-                            id={slugify(section.name)}
-                        />
-                        ))}
-                      </div>
-                  </div>
-
-                  {/* --- RIGHT COLUMN  --- */}
-                  <div className="md:col-span-1">
-                      {/* --- MODIFICATION: Added ref to this sticky container --- */}
-                      <div ref={stickyWrapperRef} className={`md:sticky md:top-24 h-fit transition-all duration-300 ${isSidebarCompact ? 'md:mt-0' : 'md:-mt-72'}`}>
-                          <div className="border border-gray-200 overflow-hidden bg-gray-50">
-                            {/* Trailer is still conditionally rendered */}
-                            {!isSidebarCompact && <Trailer mediaItems={courseData.media} />}
-                            <CTA
-                              ctaText={lang === 'bn' ? 'কোর্সটি কিনুন' : courseData.cta_text.name}
-                            />
-                            {courseData.checklist?.length > 0 && (
-                              <Checklist title={t.checklistTitle} items={courseData.checklist} />
-                            )}
-                          </div>
-                      </div>
-                  </div>
+            
+            <div className="md:hidden pb-8">
+              <div className="bg-white">
+                <CTA
+                  ctaText={lang === 'bn' ? 'কোর্সটি কিনুন' : courseData.cta_text.name}
+                />
+                {courseData.checklist?.length > 0 && (
+                  <Checklist title={t.checklistTitle} items={courseData.checklist} />
+                )}
               </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-16">
+              {/* --- LEFT COLUMN (Main Content Sections) --- */}
+              <div className="md:col-span-2">
+                <SectionNav items={navItems} />
+                <div className="h-8" />
+                <div>
+                  {courseData.sections.map((section, index) => (
+                  <DynamicSection
+                      key={index}
+                      section={section}
+                      lang={lang}
+                      translations={translations}
+                      id={slugify(section.name)}
+                  />
+                  ))}
+                </div>
+              </div>
+
+              {/* --- RIGHT COLUMN--- */}
+              <div className="hidden md:block md:col-span-1">
+                <div ref={stickyWrapperRef} className={`md:sticky md:top-24 h-fit transition-all duration-300 ${isSidebarCompact ? 'md:mt-0' : 'md:-mt-72'}`}>
+                  <div className="border border-gray-200 overflow-hidden bg-gray-50">
+                    {!isSidebarCompact && <Trailer mediaItems={courseData.media} />}
+                    <CTA
+                      ctaText={lang === 'bn' ? 'কোর্সটি কিনুন' : courseData.cta_text.name}
+                    />
+                    {courseData.checklist?.length > 0 && (
+                      <Checklist title={t.checklistTitle} items={courseData.checklist} />
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </main>
       </div>
