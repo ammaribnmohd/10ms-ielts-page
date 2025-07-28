@@ -80,47 +80,47 @@ export default function Trailer({ mediaItems, aspectRatioClassName }: TrailerPro
 
   return (
     <div className="w-full">
-<div className={`relative ${aspectRatioClassName} overflow-hidden bg-gray-50 mt-1 ml-1 mr-1`} style={{ minHeight: '200px' }}>
-  {isVideoPlaying && activeItem.resource_type === 'video' ? (
-    <iframe
-      src={`https://www.youtube.com/embed/${activeItem.resource_value}?autoplay=1`}
-      title="YouTube video player"
-      frameBorder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      allowFullScreen
-      className="absolute inset-0 w-full h-full"
-      style={{ width: '100%', height: '100%' }}
-    />
-  ) : (
-    <>
-      <Image
-        src={
-          activeItem.resource_type === 'video'
-            ? activeItem.thumbnail_url
-            : activeItem.resource_value
-        }
-        alt={activeItem.resource_type === 'video' ? 'Video thumbnail' : 'Gallery image'}
-        className="absolute inset-0 w-full h-full object-cover"
-        fill
-        onError={(e) => {
-          console.error('Image failed to load:', activeItem.resource_type === 'video' ? activeItem.thumbnail_url : activeItem.resource_value);
-          e.currentTarget.style.display = 'none';
-        }}
-      />
+      <div className={`relative ${aspectRatioClassName} overflow-hidden bg-gray-50 mt-1 ml-1 mr-1`} style={{ minHeight: '200px' }}>
+        {isVideoPlaying && activeItem.resource_type === 'video' ? (
+          <iframe
+            src={`https://www.youtube.com/embed/${activeItem.resource_value}?autoplay=1`}
+            title="YouTube video player"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            className="absolute inset-0 w-full h-full"
+            style={{ width: '100%', height: '100%' }}
+          />
+        ) : (
+          <>
+            <Image
+              src={
+                activeItem.resource_type === 'video'
+                  ? activeItem.thumbnail_url
+                  : activeItem.resource_value
+              }
+              alt={activeItem.resource_type === 'video' ? 'Video thumbnail' : 'Gallery image'}
+              className="absolute inset-0 w-full h-full object-cover"
+              fill
+              onError={(e) => {
+                console.error('Image failed to load:', activeItem.resource_type === 'video' ? activeItem.thumbnail_url : activeItem.resource_value);
+                e.currentTarget.style.display = 'none';
+              }}
+            />
 
-      {activeItem.resource_type === 'video' && (
-        <button
-          onClick={handlePlayVideo}
-          className="absolute inset-0 flex items-center justify-center  transition-all duration-300 group z-10"
-          aria-label="Play video"
-        >
-          <div className="transform transition-transform duration-300 group-hover:scale-105">
-            <PlayIcon />
-          </div> 
-        </button>
-      )}
-    </>
-  )}
+            {activeItem.resource_type === 'video' && (
+              <button
+                onClick={handlePlayVideo}
+                className="absolute inset-0 flex items-center justify-center  transition-all duration-300 group z-10"
+                aria-label="Play video"
+              >
+                <div className="transform transition-transform duration-300 group-hover:scale-105">
+                  <PlayIcon />
+                </div>
+              </button>
+            )}
+          </>
+        )}
 
         {galleryItems.length > 1 && (
           <>
@@ -152,8 +152,8 @@ export default function Trailer({ mediaItems, aspectRatioClassName }: TrailerPro
                 ref={(el) => { thumbnailRefs.current[index] = el; }}
                 onClick={() => handleThumbnailClick(index)}
                 className={`relative flex-shrink-0 w-14 h-10 overflow-hidden border-2 transition-all duration-300 hover:scale-105 ${activeIndex === index
-                    ? 'border-green-500 shadow-md'
-                    : 'border-transparent hover:border-gray-300' 
+                  ? 'border-green-500 shadow-md'
+                  : 'border-transparent hover:border-gray-300'
                   }`}
               >
                 <Image

@@ -1,4 +1,3 @@
-
 export interface Media {
   name: string;
   resource_type: 'video' | 'image';

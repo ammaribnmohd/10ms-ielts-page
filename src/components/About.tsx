@@ -1,4 +1,4 @@
-'use client'; 
+'use client';
 import { useState } from 'react';
 import { AboutItem } from "@/types/course";
 
@@ -13,7 +13,7 @@ interface AboutProps {
 }
 
 export default function About({ items }: AboutProps) {
-    const [activeIndex, setActiveIndex] = useState<number | null>(0); 
+    const [activeIndex, setActiveIndex] = useState<number | null>(0);
     const handleToggle = (index: number) => {
         setActiveIndex(activeIndex === index ? null : index);
     };

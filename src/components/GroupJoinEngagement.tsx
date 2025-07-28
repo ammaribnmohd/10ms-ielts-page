@@ -14,29 +14,26 @@ export default function GroupJoinEngagement({ items }: GroupJoinEngagementProps)
   const formattedTitle = item.title.replace('(Guideline)', '<br/>(Guideline)');
 
   return (
-    <div 
-      key={item.id} 
+    <div
+      key={item.id}
       className="relative rounded-2xl shadow-xl overflow-hidden"
     >
-      
+
       <Image
         src={item.background.image}
-        alt="" 
+        alt=""
         fill
         sizes="100vw"
         className="object-cover z-0"
-        priority 
+        priority
       />
-      
+
       <div className="absolute inset-0 bg-black/60 z-10"></div>
 
-
       <div className="relative z-20 grid grid-cols-1 md:grid-cols-2 gap-8 items-center p-6 md:p-8">
-        
-        {/* --- Left Column: Text Content --- */}
+
         <div className="md:col-span-1 flex flex-col justify-center space-y-4 text-center md:text-left">
-          
-          {/* "Free PDF" Header with Icon */}
+
           <div className="flex items-center gap-x-3 justify-center md:justify-start">
             <Image
               src={item.top_left_icon_img}
@@ -52,7 +49,7 @@ export default function GroupJoinEngagement({ items }: GroupJoinEngagementProps)
           </div>
 
           {/* Main Title */}
-          <h3 
+          <h3
             className="text-xl lg:text-xl font-semibold text-white leading-tight"
             dangerouslySetInnerHTML={{ __html: formattedTitle }}
           />

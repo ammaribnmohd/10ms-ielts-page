@@ -1,4 +1,3 @@
-
 import type { GetStaticProps, GetStaticPaths, InferGetStaticPropsType } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -14,12 +13,13 @@ import MobileTopCtaBlock from '@/components/MobileTopCtaBlock';
 import StickyMobileCta from '@/components/StickyMobileCta';
 import MainContent from '@/components/MainContent';
 import DesktopSidebar from '@/components/DesktopSidebar';
+import Footer from '@/components/Footer';
 
 const slugify = (text: string) => text.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
 
 export default function CoursePage({ courseData }: InferGetStaticPropsType<typeof getStaticProps>) {
   const router = useRouter();
-  
+
   const [showStickyCta, setShowStickyCta] = useState(false);
   const mobileCtaRef = useRef<HTMLDivElement>(null);
 
@@ -55,28 +55,28 @@ export default function CoursePage({ courseData }: InferGetStaticPropsType<typeo
   if (!courseData) return <div>Error loading course data. Please try again later.</div>;
 
   const translations: Translations = {
-      en: {
-          checklistTitle: 'What you get in this course'
-      },
-      bn: {
-          checklistTitle: 'এই কোর্সে যা থাকছে',
-          "Course instructor": "কোর্স ইন্সট্রাক্টর",
-          "How the course is laid out": "কোর্সটি যেভাবে সাজানো হয়েছে",
-          "What you will learn by doing the course": "কোর্সটি করে যা শিখবেন",
-          "Course details": "কোর্স সম্পর্কে বিস্তারিত",
-          "Course Exclusive Feature": "কোর্স এক্সক্লুসিভ ফিচার",
-          "Students opinion": "শিক্ষার্থীদের মতামত",
-          "Frequently Ask Questions": "সাধারণ জিজ্ঞাসা",
-          "Free items with this products-": "এই কোর্সের সাথে যা ফ্রি পাচ্ছেন-"
-      }
+    en: {
+      checklistTitle: 'What you get in this course'
+    },
+    bn: {
+      checklistTitle: 'এই কোর্সে যা থাকছে',
+      "Course instructor": "কোর্স ইন্সট্রাক্টর",
+      "How the course is laid out": "কোর্সটি যেভাবে সাজানো হয়েছে",
+      "What you will learn by doing the course": "কোর্সটি করে যা শিখবেন",
+      "Course details": "কোর্স সম্পর্কে বিস্তারিত",
+      "Course Exclusive Feature": "কোর্স এক্সক্লুসিভ ফিচার",
+      "Students opinion": "শিক্ষার্থীদের মতামত",
+      "Frequently Ask Questions": "সাধারণ জিজ্ঞাসা",
+      "Free items with this products-": "এই কোর্সের সাথে যা ফ্রি পাচ্ছেন-"
+    }
   };
   const t = translations[lang];
 
   const navItems = courseData.sections
     .filter(section => section.name && ['instructors', 'features', 'pointers', 'about', 'feature_explanations', 'free_items', 'testimonials', 'faq'].includes(section.type))
     .map(section => {
-        const translatedName = lang === 'bn' && translations.bn[section.name] ? translations.bn[section.name] : section.name;
-        return { name: translatedName, id: slugify(section.name) }
+      const translatedName = lang === 'bn' && translations.bn[section.name] ? translations.bn[section.name] : section.name;
+      return { name: translatedName, id: slugify(section.name) }
     });
 
   const PRICING_DATA = { price: 3850, originalPrice: 5000, discount: 1150 };
@@ -102,7 +102,7 @@ export default function CoursePage({ courseData }: InferGetStaticPropsType<typeo
           />
 
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
-            
+
             <MobileTopCtaBlock
               ref={mobileCtaRef}
               ctaText={lang === 'bn' ? 'কোর্সটি কিনুন' : courseData.cta_text.name}
@@ -110,7 +110,7 @@ export default function CoursePage({ courseData }: InferGetStaticPropsType<typeo
               checklist={courseData.checklist}
             />
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-16">
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-x-16">
               <MainContent
                 navItems={navItems}
                 sections={courseData.sections}
@@ -126,6 +126,8 @@ export default function CoursePage({ courseData }: InferGetStaticPropsType<typeo
             </div>
           </div>
         </main>
+
+        <Footer />
 
         <StickyMobileCta
           show={showStickyCta}
@@ -153,16 +155,16 @@ export const getStaticProps: GetStaticProps<{ courseData: CourseData | null; }> 
     const jsonResponse = await res.json();
     const apiData = jsonResponse.data;
     const courseData: CourseData = {
-        ...apiData,
-        cta_text: {
-            name: apiData.cta_text.name || 'Enroll Now',
-            value: apiData.cta_text.value
-        },
-        seo: {
-            title: apiData.seo.title,
-            description: apiData.seo.description,
-            image: apiData.seo.defaultMeta.find((meta: SeoMetaTag) => meta.value === 'og:image')?.content || ''
-        }
+      ...apiData,
+      cta_text: {
+        name: apiData.cta_text.name || 'Enroll Now',
+        value: apiData.cta_text.value
+      },
+      seo: {
+        title: apiData.seo.title,
+        description: apiData.seo.description,
+        image: apiData.seo.defaultMeta.find((meta: SeoMetaTag) => meta.value === 'og:image')?.content || ''
+      }
     };
     return { props: { courseData }, revalidate: 3600 };
   } catch (error) {

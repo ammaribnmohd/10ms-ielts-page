@@ -1,10 +1,7 @@
-// src/components/CTA.tsx
-
 interface CtaProps {
-    ctaText: string;
+  ctaText: string;
 }
 
-// Store pricing data internally and hardcode it here.
 const PRICING_DATA = {
   price: 3850,
   originalPrice: 5000,
