@@ -15,7 +15,8 @@ import MainContent from '@/components/MainContent';
 import DesktopSidebar from '@/components/DesktopSidebar';
 import Footer from '@/components/Footer';
 
-const slugify = (text: string) => text.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
+// The slugify function is no longer needed here for section IDs.
+// const slugify = (text: string) => text.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
 
 export default function CoursePage({ courseData }: InferGetStaticPropsType<typeof getStaticProps>) {
   const router = useRouter();
@@ -54,30 +55,22 @@ export default function CoursePage({ courseData }: InferGetStaticPropsType<typeo
 
   if (!courseData) return <div>Error loading course data. Please try again later.</div>;
 
-  const translations: Translations = {
+  const translations: Omit<Translations, 'bn'> & { bn: { checklistTitle: string; [key: string]: string } } = {
     en: {
       checklistTitle: 'What you get in this course'
     },
     bn: {
       checklistTitle: 'এই কোর্সে যা থাকছে',
-      "Course instructor": "কোর্স ইন্সট্রাক্টর",
-      "How the course is laid out": "কোর্সটি যেভাবে সাজানো হয়েছে",
-      "What you will learn by doing the course": "কোর্সটি করে যা শিখবেন",
-      "Course details": "কোর্স সম্পর্কে বিস্তারিত",
-      "Course Exclusive Feature": "কোর্স এক্সক্লুসিভ ফিচার",
-      "Students opinion": "শিক্ষার্থীদের মতামত",
-      "Frequently Ask Questions": "সাধারণ জিজ্ঞাসা",
-      "Free items with this products-": "এই কোর্সের সাথে যা ফ্রি পাচ্ছেন-"
     }
   };
-  const t = translations[lang];
+  const t = lang === 'bn' ? translations.bn : translations.en;
 
   const navItems = courseData.sections
     .filter(section => section.name && ['instructors', 'features', 'pointers', 'about', 'feature_explanations', 'free_items', 'testimonials', 'faq'].includes(section.type))
     .map(section => {
-      const translatedName = lang === 'bn' && translations.bn[section.name] ? translations.bn[section.name] : section.name;
-      return { name: translatedName, id: slugify(section.name) }
+      return { name: section.name, id: section.type };
     });
+
 
   const PRICING_DATA = { price: 3850, originalPrice: 5000, discount: 1150 };
 
@@ -113,10 +106,14 @@ export default function CoursePage({ courseData }: InferGetStaticPropsType<typeo
             <div className="grid grid-cols-1 md:grid-cols-5 gap-x-16">
               <MainContent
                 navItems={navItems}
-                sections={courseData.sections}
-                lang={lang}
-                translations={translations}
-              />
+                sections={courseData.sections} lang={'en'} translations={{
+                  en: {
+                    checklistTitle: ''
+                  },
+                  bn: {
+                    checklistTitle: ''
+                  }
+                }}/>
               <DesktopSidebar
                 mediaItems={courseData.media}
                 ctaText={lang === 'bn' ? 'কোর্সটি কিনুন' : courseData.cta_text.name}

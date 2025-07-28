@@ -13,7 +13,7 @@ import GroupJoinEngagement from '@/components/GroupJoinEngagement';
 import FreeItems from '@/components/FreeItems';
 
 interface MainContentProps {
-    navItems: { name: string; id: string; }[];
+    navItems: { name: string; id: Section['type']; }[];
     sections: Section[];
     lang: 'en' | 'bn';
     translations: Translations;

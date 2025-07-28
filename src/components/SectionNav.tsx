@@ -1,10 +1,11 @@
 'use client';
 
+import { Section } from '@/types/course';
 // Import the necessary React hooks
 import { useRef, useState, useEffect, useCallback } from 'react';
 
 interface NavItem {
-  id: string;
+  id: Section['type']; 
   name: string;
 }
 

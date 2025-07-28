@@ -34,7 +34,7 @@ export default function Hero({ title, description, backgroundImage, mediaItems }
               {title}
             </h1>
             <div
-              className="mt-4 text-base text-neutral-300 prose prose-invert max-w-none"
+              className="mt-4 text-base text-gray-400 prose prose-invert max-w-none"
               dangerouslySetInnerHTML={{ __html: description }}
             />
           </div>
