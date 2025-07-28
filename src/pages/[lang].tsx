@@ -1,4 +1,4 @@
-
+// src/pages/[lang].tsx
 
 import type { GetStaticProps, GetStaticPaths, InferGetStaticPropsType } from 'next';
 import Head from 'next/head';
@@ -37,7 +37,7 @@ const DynamicSection = ({ section, lang, translations, id }: { section: Section;
 
   let title = section.name;
   if (lang === 'bn' && translations.bn[section.name]) {
-      title = translations.bn[section.name];
+    title = translations.bn[section.name];
   }
 
   const renderSectionContent = () => {
@@ -60,7 +60,7 @@ const DynamicSection = ({ section, lang, translations, id }: { section: Section;
   const content = renderSectionContent();
   if (!content) return null;
 
-  const useWrapper = !['about', 'faq', 'group_join_engagement', 'free_items','instructor', 'features','feature_explanations', 'testimonials'].includes(section.type);
+  const useWrapper = !['about', 'faq', 'group_join_engagement', 'free_items', 'instructor', 'features', 'feature_explanations', 'testimonials'].includes(section.type);
 
   return (
     <div id={id} className="scroll-mt-[140px] pb-12">
@@ -68,9 +68,9 @@ const DynamicSection = ({ section, lang, translations, id }: { section: Section;
         <h2 className="text-3xl font-bold mb-6 text-gray-800">{title}</h2>
       )}
       {useWrapper ? (
-         <div className="border p-6 bg-slate-50 rounded-lg shadow-sm">
-            {content}
-         </div>
+        <div className="border p-6 bg-slate-50 rounded-lg shadow-sm">
+          {content}
+        </div>
       ) : (
         content
       )}
@@ -82,30 +82,38 @@ const DynamicSection = ({ section, lang, translations, id }: { section: Section;
 
 export default function CoursePage({ courseData }: InferGetStaticPropsType<typeof getStaticProps>) {
   const router = useRouter();
-  
+
   const [isSidebarCompact, setIsSidebarCompact] = useState(false);
   const stickyWrapperRef = useRef<HTMLDivElement>(null);
 
+  // State and ref for the sticky mobile CTA
+  const [showStickyCta, setShowStickyCta] = useState(false);
+  const mobileCtaRef = useRef<HTMLDivElement>(null);
+
+
   useEffect(() => {
     const handleScroll = () => {
-      if (window.innerWidth < 768) {
-        setIsSidebarCompact(false);
-        return;
-      }
-      if (stickyWrapperRef.current) {
+      // Logic for the desktop sidebar
+      if (window.innerWidth >= 768 && stickyWrapperRef.current) {
         const stickyOffset = 96;
         const elementTop = stickyWrapperRef.current.getBoundingClientRect().top;
-        if (elementTop <= stickyOffset) {
-          setIsSidebarCompact(true);
-        } else {
-          setIsSidebarCompact(false);
-        }
+        setIsSidebarCompact(elementTop <= stickyOffset);
+      } else {
+        setIsSidebarCompact(false);
+      }
+
+      // Logic for the mobile sticky CTA
+      if (mobileCtaRef.current && window.innerWidth < 768) {
+        const rect = mobileCtaRef.current.getBoundingClientRect();
+        setShowStickyCta(rect.bottom < 0);
+      } else {
+        setShowStickyCta(false);
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('resize', handleScroll);
-    handleScroll(); 
+    handleScroll();
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
@@ -125,33 +133,40 @@ export default function CoursePage({ courseData }: InferGetStaticPropsType<typeo
   if (!courseData) return <div>Error loading course data. Please try again later.</div>;
 
   const translations: Translations = {
-      en: {
-          checklistTitle: 'What you get in this course'
-      },
-      bn: {
-          checklistTitle: 'এই কোর্সে যা থাকছে',
-          "Course instructor": "কোর্স ইন্সট্রাক্টর",
-          "How the course is laid out": "কোর্সটি যেভাবে সাজানো হয়েছে",
-          "What you will learn by doing the course": "কোর্সটি করে যা শিখবেন",
-          "Course details": "কোর্স সম্পর্কে বিস্তারিত",
-          "Course Exclusive Feature": "কোর্স এক্সক্লুসিভ ফিচার",
-          "Students opinion": "শিক্ষার্থীদের মতামত",
-          "Frequently Ask Questions": "সাধারণ জিজ্ঞাসা",
-          "Free items with this products-": "এই কোর্সের সাথে যা ফ্রি পাচ্ছেন-"
-      }
+    en: {
+      checklistTitle: 'What you get in this course'
+    },
+    bn: {
+      checklistTitle: 'এই কোর্সে যা থাকছে',
+      "Course instructor": "কোর্স ইন্সট্রাক্টর",
+      "How the course is laid out": "কোর্সটি যেভাবে সাজানো হয়েছে",
+      "What you will learn by doing the course": "কোর্সটি করে যা শিখবেন",
+      "Course details": "কোর্স সম্পর্কে বিস্তারিত",
+      "Course Exclusive Feature": "কোর্স এক্সক্লুসিভ ফিচার",
+      "Students opinion": "শিক্ষার্থীদের মতামত",
+      "Frequently Ask Questions": "সাধারণ জিজ্ঞাসা",
+      "Free items with this products-": "এই কোর্সের সাথে যা ফ্রি পাচ্ছেন-"
+    }
   };
   const t = translations[lang];
 
   const navItems = courseData.sections
-    .filter(section => section.name && ['instructors', 'features', 'pointers', 'about', 'feature_explanations', 'free_items', 'testimonials', 'faq'].includes(section.type))
+    .filter(section => section.name && ['instructors', 'features', 'pointers', 'about', 'feature_explantions', 'free_items', 'testimonials', 'faq'].includes(section.type))
     .map(section => {
-        const translatedName = lang === 'bn' && translations.bn[section.name] ? translations.bn[section.name] : section.name;
+      const translatedName = lang === 'bn' && translations.bn[section.name] ? translations.bn[section.name] : section.name;
 
-        return {
-            name: translatedName,
-            id: slugify(section.name)
-        }
+      return {
+        name: translatedName,
+        id: slugify(section.name)
+      }
     });
+
+  // Replicating hardcoded pricing from CTA component for the sticky bar
+  const PRICING_DATA = {
+    price: 3850,
+    originalPrice: 5000,
+    discount: 1150,
+  };
 
 
   return (
@@ -178,12 +193,13 @@ export default function CoursePage({ courseData }: InferGetStaticPropsType<typeo
           />
 
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
-            
             <div className="md:hidden pb-8">
               <div className="bg-white">
-                <CTA
-                  ctaText={lang === 'bn' ? 'কোর্সটি কিনুন' : courseData.cta_text.name}
-                />
+                <div ref={mobileCtaRef}>
+                  <CTA
+                    ctaText={lang === 'bn' ? 'কোর্সটি কিনুন' : courseData.cta_text.name}
+                  />
+                </div>
                 {courseData.checklist?.length > 0 && (
                   <Checklist title={t.checklistTitle} items={courseData.checklist} />
                 )}
@@ -193,17 +209,19 @@ export default function CoursePage({ courseData }: InferGetStaticPropsType<typeo
             <div className="grid grid-cols-1 md:grid-cols-3 gap-x-16">
               {/* --- LEFT COLUMN (Main Content Sections) --- */}
               <div className="md:col-span-2">
-                <SectionNav items={navItems} />
-                <div className="h-8" />
+                <div className="hidden md:contents">
+                  <SectionNav items={navItems} />
+                  <div className="h-8" />
+                </div>
                 <div>
                   {courseData.sections.map((section, index) => (
-                  <DynamicSection
+                    <DynamicSection
                       key={index}
                       section={section}
                       lang={lang}
                       translations={translations}
                       id={slugify(section.name)}
-                  />
+                    />
                   ))}
                 </div>
               </div>
@@ -225,6 +243,42 @@ export default function CoursePage({ courseData }: InferGetStaticPropsType<typeo
             </div>
           </div>
         </main>
+
+        {/* --- STICKY MOBILE view CTA bar --- */}
+        <div
+          className={`fixed bottom-0 left-0 right-0 bg-white p-3 shadow-[0_-2px_10px_rgba(0,0,0,0.1)] z-50 md:hidden transition-transform duration-300 ease-in-out ${showStickyCta ? 'translate-y-0' : 'translate-y-full'
+            }`}
+        >
+          <div className="flex flex-col gap-y-2 max-w-7xl mx-auto">
+            {/* Pricing Info */}
+            <div className="flex items-center gap-x-2">
+              <span className="text-lg font-semibold text-gray-900">৳{PRICING_DATA.price}</span>
+              <del className="text-sm font-normal text-gray-500">৳{PRICING_DATA.originalPrice}</del>
+              {PRICING_DATA.discount && (
+                <p className="bg-orange-500 text-white px-2 py-0.5 rounded text-xs">
+                  {PRICING_DATA.discount} ৳ ছাড়
+                </p>
+              )}
+            </div>
+            <a
+              href="#variant"
+              className="w-full text-center"
+              style={{
+                backgroundColor: 'rgb(28, 171, 85)',
+                color: 'rgb(255, 255, 255)',
+                borderBottomWidth: '4px',
+                borderColor: 'rgba(0, 0, 0, 0.3)',
+                borderRadius: '8px',
+                padding: '10px 20px',
+                fontSize: '16px',
+                fontWeight: '600',
+                lineHeight: '22px',
+              }}
+            >
+              {lang === 'bn' ? 'কোর্সটি কিনুন' : courseData.cta_text.name}
+            </a>
+          </div>
+        </div>
       </div>
     </>
   );
@@ -246,16 +300,16 @@ export const getStaticProps: GetStaticProps<{
     const jsonResponse = await res.json();
     const apiData = jsonResponse.data;
     const courseData: CourseData = {
-        ...apiData,
-        cta_text: {
-            name: apiData.cta_text.name || 'Enroll Now',
-            value: apiData.cta_text.value
-        },
-        seo: {
-            title: apiData.seo.title,
-            description: apiData.seo.description,
-            image: apiData.seo.defaultMeta.find((meta: SeoMetaTag) => meta.value === 'og:image')?.content || ''
-        }
+      ...apiData,
+      cta_text: {
+        name: apiData.cta_text.name || 'Enroll Now',
+        value: apiData.cta_text.value
+      },
+      seo: {
+        title: apiData.seo.title,
+        description: apiData.seo.description,
+        image: apiData.seo.defaultMeta.find((meta: SeoMetaTag) => meta.value === 'og:image')?.content || ''
+      }
     };
     return { props: { courseData }, revalidate: 3600 };
   } catch (error) {

@@ -26,8 +26,7 @@ export default function Hero({ title, description, backgroundImage, mediaItems }
           <div className="lg:col-span-2">
             
             <div className="md:hidden mb-6  overflow-hidden shadow-xl">
-              <Trailer mediaItems={mediaItems} />
-            </div>
+ <Trailer mediaItems={mediaItems} aspectRatioClassName="aspect-[16/10]" />            </div>
 
             <h1 className="text-3xl md:text-4xl font-semibold text-white leading-tight">
               {title}

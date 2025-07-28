@@ -63,7 +63,7 @@ const Navbar = ({ currentLang, onLanguageToggle }: NavbarProps) => {
           <div className="flex items-center space-x-4 flex-shrink-0">
              <div className="hidden lg:flex items-center space-x-5">
                 {t.navLinks.map(link => (
-                    <a key={link} href="#" className="flex items-center text-gray-700 font-semibold hover:text-green-500 transition-colors text-sm whitespace-nowrap">
+                    <a key={link} href="#" className="flex items-center text-gray-700 font-base hover:text-green-500 transition-colors text-sm whitespace-nowrap">
                         <span>{link}</span>
                         <ChevronDownIcon />
                     </a>
