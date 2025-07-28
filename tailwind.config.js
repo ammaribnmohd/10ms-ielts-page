@@ -11,7 +11,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ['var(--font-inter)', 'sans-serif'],
-        bengali: ['var(--font-noto-sans-bengali)', 'sans-serif'],
+        bengali: ['var(--font-inter)', 'var(--font-noto-sans-bengali)', 'sans-serif'],
       },
     },
   },
