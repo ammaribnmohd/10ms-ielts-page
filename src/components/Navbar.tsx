@@ -80,8 +80,7 @@ const Navbar = ({ currentLang, onLanguageToggle }: NavbarProps) => {
               <PhoneIcon />
               <span>16910</span>
             </a>
-            <a href="#" className="rounded-md bg-green-500 px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-600 transition-colors">{t.login}</a>
-          </div>
+<a href="#" className="inline-block w-24 rounded-md bg-green-500 px-6 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-green-600 transition-colors">{t.login}</a>          </div>
         </div>
       </nav>
     </header>
