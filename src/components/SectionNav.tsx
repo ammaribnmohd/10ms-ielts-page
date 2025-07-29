@@ -5,7 +5,7 @@ import { Section } from '@/types/course';
 import { useRef, useState, useEffect, useCallback } from 'react';
 
 interface NavItem {
-  id: Section['type']; 
+  id: Section['type'];
   name: string;
 }
 

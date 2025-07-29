@@ -55,7 +55,7 @@ export default function CoursePage({ courseData }: InferGetStaticPropsType<typeo
 
   if (!courseData) return <div>Error loading course data. Please try again later.</div>;
 
-  const translations: Omit<Translations, 'bn'> & { bn: { checklistTitle: string; [key: string]: string } } = {
+  const translations: Omit<Translations, 'bn'> & { bn: { checklistTitle: string;[key: string]: string } } = {
     en: {
       checklistTitle: 'What you get in this course'
     },
@@ -113,7 +113,7 @@ export default function CoursePage({ courseData }: InferGetStaticPropsType<typeo
                   bn: {
                     checklistTitle: ''
                   }
-                }}/>
+                }} />
               <DesktopSidebar
                 mediaItems={courseData.media}
                 ctaText={lang === 'bn' ? 'কোর্সটি কিনুন' : courseData.cta_text.name}
